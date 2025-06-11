@@ -508,7 +508,9 @@ footer a:hover {
         grid-template-columns: 1fr;
     }
     
-    .copyright-content {
+    .copyright-content, .legal-content, .status-content, .docs-content, .cookies-content {
         padding: 2rem 1rem;
     }
 }
+
+/* Additional styles for new pages continue from the previous file... */
