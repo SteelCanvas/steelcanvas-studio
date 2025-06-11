@@ -374,34 +374,62 @@ nav {
 
 footer {
     background: #000000;
-    text-align: center;
     padding: 3rem 0;
     border-top: 1px solid #708090;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 footer p {
     color: #696969;
     margin: 0;
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
 }
 
 footer a {
     color: #A9A9A9;
     text-decoration: none;
     transition: all 0.3s ease;
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border-radius: 4px;
 }
 
 footer a:hover {
     color: #C0C0C0;
+    background: rgba(112, 128, 144, 0.1);
     text-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
 }
 
-.copyright-page {
+@media (max-width: 768px) {
+    .footer-links {
+        gap: 1rem;
+    }
+    
+    footer a {
+        font-size: 0.8rem;
+    }
+}
+
+.copyright-page, .legal-page, .status-page, .docs-page, .cookies-page {
     padding-top: 100px;
     min-height: 100vh;
 }
 
-.copyright-content {
-    max-width: 800px;
+.copyright-content, .legal-content, .status-content, .docs-content, .cookies-content {
+    max-width: 1000px;
     margin: 0 auto;
     padding: 4rem 2rem;
 }
