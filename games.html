@@ -116,155 +116,96 @@
                 <li><a href="news">News</a></li>
                 <li><a href="community">Community</a></li>
                 <li><a href="support">Support</a></li>
-                <li><a href="/#contact">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <main class="games-page">
-        <div class="container">
-            <section class="games-header">
-                <h1>Our Games</h1>
-                <p class="games-intro">We create innovative gaming experiences that challenge your mind and captivate your imagination. Each game is crafted with passion, creativity, and cutting-edge technology.</p>
-            </section>
+    <main>
+        <section class="hero games-hero">
+            <div class="hero-content">
+                <h2>Our Gaming Universe</h2>
+                <p>Discover innovative gaming experiences crafted with passion, creativity, and cutting-edge technology. Each game is designed to challenge your mind and captivate your imagination.</p>
+                <a href="#featured-games" class="cta-button">Explore Our Games</a>
+            </div>
+        </section>
 
-            <section class="featured-game">
-                <div class="featured-content">
-                    <div class="featured-info">
-                        <div class="game-badge-large">Coming Soon</div>
-                        <h2>Brainrot Battle</h2>
-                        <p class="featured-tagline">The Ultimate Battle of Wits</p>
-                        <p class="featured-description">Experience the ultimate battle of wits in this mind-bending strategy game that challenges your cognitive abilities like never before. Navigate complex puzzles, outsmart opponents, and prove your mental prowess.</p>
-                        <div class="featured-meta">
-                            <span class="release-info">Release Date: July 10th, 2025</span>
-                            <span class="genre-info">Genre: Strategy / Puzzle</span>
-                        </div>
-                        <div class="featured-actions">
-                            <a href="brainrot-battle" class="action-button primary">Learn More</a>
-                            <a href="mailto:info@steelcanvas.studio?subject=Brainrot Battle - Early Access" class="action-button secondary">Get Early Access</a>
-                        </div>
-                    </div>
-                    <div class="featured-media">
-                        <div class="game-preview-large">
-                            <div class="preview-content">
-                                <h3>Game Preview</h3>
-                                <p>Screenshots and gameplay videos coming soon!</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="games-library">
-                <h2>All Games</h2>
-                <div class="games-filter">
-                    <button class="filter-btn active" data-filter="all">All Games</button>
-                    <button class="filter-btn" data-filter="released">Released</button>
-                    <button class="filter-btn" data-filter="coming-soon">Coming Soon</button>
-                    <button class="filter-btn" data-filter="in-development">In Development</button>
-                </div>
-
+        <section id="featured-games" class="games">
+            <div class="container">
+                <h2>Featured Games</h2>
                 <div class="games-grid">
-                    <div class="game-card-detailed coming-soon" data-category="coming-soon">
-                        <div class="game-image">
-                            <div class="game-placeholder-detailed">
-                                <span>Brainrot Battle</span>
-                            </div>
-                            <div class="game-status-overlay">Coming Soon</div>
-                        </div>
-                        <div class="game-content">
-                            <h3>Brainrot Battle</h3>
-                            <p class="game-genre">Strategy / Puzzle</p>
-                            <p class="game-summary">The ultimate battle of wits in a mind-bending strategy experience.</p>
-                            <div class="game-details-meta">
-                                <span class="release-date">July 10, 2025</span>
-                                <span class="platforms">PC, Mac, Linux</span>
-                            </div>
-                            <div class="game-actions">
-                                <a href="brainrot-battle" class="game-link">View Details</a>
-                                <a href="mailto:info@steelcanvas.studio?subject=Brainrot Battle - Wishlist" class="wishlist-link">Add to Wishlist</a>
-                            </div>
+                    <div class="game-card featured">
+                        <div class="game-badge">COMING SOON</div>
+                        <h3>Brainrot Battle</h3>
+                        <p class="release-date">Coming July 10th, 2025</p>
+                        <p>Experience the ultimate battle of wits in this mind-bending strategy game that challenges your cognitive abilities like never before.</p>
+                        <div class="game-links">
+                            <a href="brainrot-battle" class="game-button">Learn More</a>
+                            <a href="mailto:info@steelcanvas.studio?subject=Brainrot Battle - Early Access" class="game-button secondary">Early Access</a>
                         </div>
                     </div>
-
-                    <div class="game-card-detailed in-development" data-category="in-development">
-                        <div class="game-image">
-                            <div class="game-placeholder-detailed">
-                                <span>Project Steel</span>
-                            </div>
-                            <div class="game-status-overlay">In Development</div>
-                        </div>
-                        <div class="game-content">
-                            <h3>Project Steel</h3>
-                            <p class="game-genre">Action / Adventure</p>
-                            <p class="game-summary">A mysterious new project pushing the boundaries of interactive storytelling.</p>
-                            <div class="game-details-meta">
-                                <span class="release-date">TBA 2026</span>
-                                <span class="platforms">TBA</span>
-                            </div>
-                            <div class="game-actions">
-                                <a href="mailto:info@steelcanvas.studio?subject=Project Steel - Information" class="game-link">Learn More</a>
-                                <a href="mailto:info@steelcanvas.studio?subject=Project Steel - Updates" class="wishlist-link">Get Updates</a>
-                            </div>
+                    <div class="game-card">
+                        <h3>Project Steel</h3>
+                        <p class="release-date">In Development - TBA 2026</p>
+                        <p>A mysterious new project pushing the boundaries of interactive storytelling and immersive gameplay experiences.</p>
+                        <div class="game-links">
+                            <a href="mailto:info@steelcanvas.studio?subject=Project Steel - Information" class="game-button secondary">Learn More</a>
                         </div>
                     </div>
-
-                    <div class="game-card-detailed in-development" data-category="in-development">
-                        <div class="game-image">
-                            <div class="game-placeholder-detailed">
-                                <span>Canvas Quest</span>
-                            </div>
-                            <div class="game-status-overlay">Early Development</div>
-                        </div>
-                        <div class="game-content">
-                            <h3>Canvas Quest</h3>
-                            <p class="game-genre">RPG / Simulation</p>
-                            <p class="game-summary">An innovative RPG experience that blends creativity with adventure.</p>
-                            <div class="game-details-meta">
-                                <span class="release-date">TBA</span>
-                                <span class="platforms">Multi-platform</span>
-                            </div>
-                            <div class="game-actions">
-                                <a href="mailto:dev@steelcanvas.studio?subject=Canvas Quest - Development" class="game-link">Development Blog</a>
-                                <a href="mailto:info@steelcanvas.studio?subject=Canvas Quest - Interest" class="wishlist-link">Show Interest</a>
-                            </div>
+                    <div class="game-card">
+                        <h3>Canvas Quest</h3>
+                        <p class="release-date">Early Development - TBA</p>
+                        <p>An innovative RPG experience that blends creativity with adventure in a unique and engaging way.</p>
+                        <div class="game-links">
+                            <a href="mailto:info@steelcanvas.studio?subject=Canvas Quest - Interest" class="game-button secondary">Show Interest</a>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section class="development-philosophy">
-                <div class="philosophy-content">
-                    <h2>Our Development Philosophy</h2>
-                    <div class="philosophy-grid">
-                        <div class="philosophy-item">
-                            <h4>Innovation First</h4>
-                            <p>We prioritize unique gameplay mechanics and fresh ideas over following trends.</p>
-                        </div>
-                        <div class="philosophy-item">
-                            <h4>Quality Over Quantity</h4>
-                            <p>Each game is meticulously crafted to deliver a memorable and polished experience.</p>
-                        </div>
-                        <div class="philosophy-item">
-                            <h4>Community Focused</h4>
-                            <p>We value player feedback and actively engage with our community throughout development.</p>
-                        </div>
-                        <div class="philosophy-item">
-                            <h4>Accessible Design</h4>
-                            <p>Our games are designed to be enjoyable for both newcomers and experienced players.</p>
-                        </div>
+        <section class="about development-philosophy">
+            <div class="container">
+                <h2>Our Development Philosophy</h2>
+                <p>At Steel Canvas Studio, we believe in creating games that matter. Our development approach is built on four core principles that guide every decision we make.</p>
+                <div class="philosophy-grid">
+                    <div class="philosophy-item">
+                        <h4>Innovation First</h4>
+                        <p>We prioritize unique gameplay mechanics and fresh ideas over following trends. Every game we create brings something new to the table.</p>
+                    </div>
+                    <div class="philosophy-item">
+                        <h4>Quality Over Quantity</h4>
+                        <p>Each game is meticulously crafted to deliver a memorable and polished experience. We take the time needed to get it right.</p>
+                    </div>
+                    <div class="philosophy-item">
+                        <h4>Community Focused</h4>
+                        <p>We value player feedback and actively engage with our community throughout development. Your voice shapes our games.</p>
+                    </div>
+                    <div class="philosophy-item">
+                        <h4>Accessible Design</h4>
+                        <p>Our games are designed to be enjoyable for both newcomers and experienced players, ensuring everyone can join the fun.</p>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <section class="newsletter-cta">
-                <div class="cta-content">
-                    <h2>Stay in the Loop</h2>
-                    <p>Be the first to know about new game announcements, development updates, and exclusive beta access opportunities.</p>
-                    <a href="mailto:info@steelcanvas.studio?subject=Newsletter Subscription&body=I would like to subscribe to Steel Canvas Studio newsletter for game updates and announcements." class="newsletter-button">Subscribe to Newsletter</a>
+        <section class="contact newsletter-cta">
+            <div class="container">
+                <h2>Stay Connected</h2>
+                <p>Be the first to know about new game announcements, development updates, and exclusive beta access opportunities.</p>
+                <div class="contact-cta">
+                    <div class="contact-card">
+                        <h3>Join Our Community</h3>
+                        <p>Get exclusive updates, behind-the-scenes content, and early access to new releases!</p>
+                        <a href="mailto:info@steelcanvas.studio?subject=Newsletter Subscription&body=I would like to subscribe to Steel Canvas Studio newsletter for game updates and announcements." class="contact-button">
+                            <span class="contact-icon">📧</span>
+                            Subscribe to Newsletter
+                            <span class="contact-email">info@steelcanvas.studio</span>
+                        </a>
+                        <p class="contact-response">We typically send updates monthly</p>
+                    </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -285,35 +226,6 @@
         </div>
     </footer>
 
-    <script>
-        // Games filter functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const gameCards = document.querySelectorAll('.game-card-detailed');
-
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    // Add active class to clicked button
-                    this.classList.add('active');
-
-                    const filter = this.getAttribute('data-filter');
-
-                    gameCards.forEach(card => {
-                        if (filter === 'all') {
-                            card.style.display = 'block';
-                        } else {
-                            if (card.classList.contains(filter)) {
-                                card.style.display = 'block';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        }
-                    });
-                });
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
