@@ -620,12 +620,15 @@ footer a:hover {
     border: 2px solid transparent;
     box-shadow: 0 0 20px rgba(112, 128, 144, 0.3);
     margin-bottom: 1rem;
+    min-width: 200px;
+    justify-content: center;
 }
 
 .contact-button:hover {
     background: linear-gradient(45deg, #778899, #B0C4DE);
     transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(112, 128, 144, 0.5);
+    border-color: rgba(192, 192, 192, 0.3);
 }
 
 .contact-icon {
@@ -703,6 +706,9 @@ main {
     .contact-button {
         padding: 16px 24px;
         font-size: 1rem;
+        min-width: 180px;
+        width: 100%;
+        max-width: 300px;
     }
     
     /* Fix mobile text cutoff */
