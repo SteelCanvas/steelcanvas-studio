@@ -1104,26 +1104,7 @@ main {
     margin-bottom: 1.5rem;
 }
 
-.newsletter-btn, .press-btn {
-    background: linear-gradient(45deg, #708090, #778899);
-    color: #ffffff;
-    padding: 14px 28px;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 0 20px rgba(112, 128, 144, 0.3);
-}
-
-.newsletter-btn:hover, .press-btn:hover {
-    background: linear-gradient(45deg, #778899, #B0C4DE);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(112, 128, 144, 0.5);
-}
+/* Newsletter and press buttons now use consistent styling */
 
 .btn-icon {
     font-size: 1.1rem;
@@ -1586,27 +1567,7 @@ main {
     margin-top: 2rem;
 }
 
-.patreon-button.primary {
-    background: linear-gradient(45deg, #708090, #778899);
-    color: #ffffff;
-    padding: 18px 36px;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    box-shadow: 0 0 25px rgba(112, 128, 144, 0.4);
-    margin-bottom: 1rem;
-}
-
-.patreon-button.primary:hover {
-    background: linear-gradient(45deg, #778899, #B0C4DE);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 35px rgba(112, 128, 144, 0.6);
-}
+/* Patreon button now uses cta-button styling */
 
 .patreon-icon {
     font-size: 1.4rem;
@@ -1683,25 +1644,7 @@ main {
     margin-top: 1.5rem;
 }
 
-.method-button.secondary {
-    background: transparent;
-    color: #C0C0C0;
-    border: 1px solid #708090;
-    padding: 12px 24px;
-    text-decoration: none;
-    border-radius: 6px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-
-.method-button.secondary:hover {
-    background: linear-gradient(45deg, #708090, #778899);
-    color: #ffffff;
-    border-color: #C0C0C0;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(112, 128, 144, 0.5);
-}
+/* Method buttons now use game-button secondary styling */
 
 /* Transparency Section */
 .transparency-section {
@@ -2028,12 +1971,7 @@ main {
         padding: 6px 10px;
     }
     
-    .patreon-button.primary {
-        padding: 16px 28px;
-        font-size: 1.1rem;
-        width: 100%;
-        justify-content: center;
-    }
+    /* Patreon button responsive styling removed - using cta-button */
     
     .support-methods-grid {
         grid-template-columns: 1fr;
@@ -2049,10 +1987,7 @@ main {
         font-size: 2.5rem;
     }
     
-    .method-button.secondary {
-        width: 100%;
-        text-align: center;
-    }
+    /* Method button responsive styling removed - using game-button secondary */
     
     .transparency-card {
         padding: 2.5rem 2rem;
@@ -2187,11 +2122,19 @@ main {
         font-size: 1rem;
     }
     
-    .newsletter-btn, .press-btn {
-        padding: 12px 24px;
-        font-size: 0.9rem;
+    /* Newsletter and press button responsive styling removed - using consistent buttons */
+    
+    /* Ensure consistent button styling on mobile */
+    .cta-button {
+        padding: 16px 28px;
+        font-size: 1rem;
         width: 100%;
         justify-content: center;
+    }
+    
+    .game-button.secondary {
+        width: 100%;
+        text-align: center;
     }
 }
     
