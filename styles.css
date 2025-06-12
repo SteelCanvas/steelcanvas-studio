@@ -112,6 +112,13 @@ nav {
     box-shadow: 0 0 15px rgba(112, 128, 144, 0.3);
 }
 
+.nav-links a.active {
+    color: #C0C0C0;
+    background: rgba(112, 128, 144, 0.3);
+    box-shadow: 0 0 20px rgba(112, 128, 144, 0.4);
+    font-weight: 600;
+}
+
 .hero {
     height: 100vh;
     background: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2F4F4F 100%);
