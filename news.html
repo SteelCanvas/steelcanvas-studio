@@ -104,7 +104,7 @@
             </div>
             <ul class="nav-links">
                 <li><a href="/">Home</a></li>
-                <li><a href="/#about">About</a></li>
+                <li><a href="about">About</a></li>
                 <li><a href="games">Games</a></li>
                 <li><a href="news" class="active">News</a></li>
                 <li><a href="community">Community</a></li>
@@ -113,195 +113,123 @@
         </nav>
     </header>
 
-    <main class="news-page">
+    <main>
         <!-- Hero Section -->
-        <section class="news-hero">
-            <div class="news-hero-content">
-                <div class="container">
-                    <h1>News & Updates</h1>
-                    <p class="news-hero-subtitle">Stay up to date with the latest developments from Steel Canvas Studio. From game announcements to behind-the-scenes insights, discover what's happening in our development journey.</p>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>News & Updates</h2>
+                <p>Stay up to date with the latest developments from Steel Canvas Studio. From game announcements to behind-the-scenes insights, discover what's happening in our development journey.</p>
+                <a href="#featured-story" class="cta-button">Latest Stories</a>
+            </div>
+        </section>
+
+        <!-- Featured Story Section -->
+        <section id="featured-story" class="games">
+            <div class="container">
+                <h2>Featured Story</h2>
+                <div class="games-grid">
+                    <div class="game-card featured">
+                        <div class="game-badge">FEATURED NEWS</div>
+                        <h3>Brainrot Battle Release Timeline</h3>
+                        <p class="release-date">June 10, 2025 - Steel Canvas Team</p>
+                        <p>We're excited to announce our release strategy for Brainrot Battle! The game will launch on July 10th, 2025 in the UK, Canada, and Australia as a soft release, allowing us to gather valuable feedback and ensure a smooth global rollout. The worldwide release will follow in September 2025, with Patreon supporters getting early access to the global version.</p>
+                        <div class="game-links">
+                            <a href="brainrot-battle" class="game-button">Learn More About Brainrot Battle</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <div class="container">
-
-            <!-- Featured Story Section -->
-            <section class="featured-story">
-                <h2>Featured Story</h2>
-                <article class="featured-card">
-                    <div class="featured-content">
-                        <div class="featured-badge">
-                            <span class="category-badge announcement">ANNOUNCEMENT</span>
-                            <span class="featured-label">FEATURED</span>
-                        </div>
-                        <h3>Brainrot Battle Release Timeline: Soft Launch July 10th, Global September</h3>
-                        <div class="article-meta">
-                            <span class="meta-date">June 10, 2025</span>
-                            <span class="meta-author">Steel Canvas Team</span>
-                            <span class="meta-read-time">4 min read</span>
-                        </div>
-                        <p class="featured-excerpt">We're excited to announce our release strategy for Brainrot Battle! The game will launch on July 10th, 2025 in the UK, Canada, and Australia as a soft release, allowing us to gather valuable feedback and ensure a smooth global rollout. The worldwide release will follow in September 2025, with Patreon supporters getting early access to the global version. This phased approach helps us deliver the best possible experience to players everywhere.</p>
-                        <div class="article-tags">
-                            <span class="tag">Brainrot Battle</span>
-                            <span class="tag">Release Date</span>
-                            <span class="tag">Strategy Game</span>
-                        </div>
-                        <a href="brainrot-battle" class="read-more-btn">Learn More About Brainrot Battle</a>
-                    </div>
-                </article>
-            </section>
-
-            <!-- News Filter Section -->
-            <section class="news-section">
-                <div class="section-header">
-                    <h2>All News</h2>
-                    <div class="news-filters">
-                        <button class="filter-btn active" data-filter="all">All News</button>
-                        <button class="filter-btn" data-filter="announcements">Announcements</button>
-                        <button class="filter-btn" data-filter="development">Development</button>
-                        <button class="filter-btn" data-filter="community">Community</button>
-                    </div>
-                </div>
+        <!-- News Filter Section -->
+        <section class="games">
+            <div class="container">
+                <h2>Recent News</h2>
 
                 <!-- News Grid -->
-                <div class="news-grid">
-                    <article class="news-card announcements" data-category="announcements">
-                        <div class="card-header">
-                            <span class="category-badge announcement">ANNOUNCEMENT</span>
-                            <span class="card-date">June 8, 2025</span>
+                <div class="games-grid">
+                    <div class="game-card">
+                        <div class="game-badge">ANNOUNCEMENT</div>
+                        <h3>Steel Canvas Studio Officially Launched</h3>
+                        <p class="release-date">June 8, 2025</p>
+                        <p>Today marks the official launch of Steel Canvas Studio. We're an independent game development company focused on creating innovative and engaging gaming experiences that push the boundaries of interactive entertainment.</p>
+                        <div class="game-links">
+                            <a href="#" class="game-button secondary">Read More</a>
                         </div>
-                        <div class="card-content">
-                            <h3>Steel Canvas Studio Officially Launched</h3>
-                            <p class="card-excerpt">Today marks the official launch of Steel Canvas Studio. We're an independent game development company focused on creating innovative and engaging gaming experiences that push the boundaries of interactive entertainment.</p>
-                            <div class="article-tags">
-                                <span class="tag">Launch</span>
-                                <span class="tag">Company News</span>
-                            </div>
-                            <div class="card-meta">
-                                <span class="read-time">2 min read</span>
-                            </div>
-                        </div>
-                    </article>
+                    </div>
 
-                    <article class="news-card development" data-category="development">
-                        <div class="card-header">
-                            <span class="category-badge development">DEVELOPMENT</span>
-                            <span class="card-date">June 5, 2025</span>
+                    <div class="game-card">
+                        <div class="game-badge">DEVELOPMENT</div>
+                        <h3>Behind the Scenes: Brainrot Battle's Puzzle Design</h3>
+                        <p class="release-date">June 5, 2025</p>
+                        <p>Take a look at our design process for creating challenging yet accessible puzzles in Brainrot Battle. Our team shares insights into balancing difficulty curves and maintaining player engagement throughout the experience.</p>
+                        <div class="game-links">
+                            <a href="#" class="game-button secondary">Read More</a>
                         </div>
-                        <div class="card-content">
-                            <h3>Behind the Scenes: Brainrot Battle's Puzzle Design</h3>
-                            <p class="card-excerpt">Take a look at our design process for creating challenging yet accessible puzzles in Brainrot Battle. Our team shares insights into balancing difficulty curves and maintaining player engagement throughout the experience.</p>
-                            <div class="article-tags">
-                                <span class="tag">Game Design</span>
-                                <span class="tag">Brainrot Battle</span>
-                                <span class="tag">Behind the Scenes</span>
-                            </div>
-                            <div class="card-meta">
-                                <span class="read-time">5 min read</span>
-                            </div>
-                        </div>
-                    </article>
+                    </div>
 
-                    <article class="news-card development" data-category="development">
-                        <div class="card-header">
-                            <span class="category-badge development">DEVELOPMENT</span>
-                            <span class="card-date">June 1, 2025</span>
+                    <div class="game-card">
+                        <div class="game-badge">DEVELOPMENT</div>
+                        <h3>Our Technology Stack and Development Tools</h3>
+                        <p class="release-date">June 1, 2025</p>
+                        <p>Learn about the technology and tools we use at Steel Canvas Studio to create our games. From Unity to version control systems, we share our complete development workflow and the decisions behind our tech choices.</p>
+                        <div class="game-links">
+                            <a href="#" class="game-button secondary">Read More</a>
                         </div>
-                        <div class="card-content">
-                            <h3>Our Technology Stack and Development Tools</h3>
-                            <p class="card-excerpt">Learn about the technology and tools we use at Steel Canvas Studio to create our games. From Unity to version control systems, we share our complete development workflow and the decisions behind our tech choices.</p>
-                            <div class="article-tags">
-                                <span class="tag">Technology</span>
-                                <span class="tag">Development Tools</span>
-                                <span class="tag">Unity</span>
-                            </div>
-                            <div class="card-meta">
-                                <span class="read-time">4 min read</span>
-                            </div>
-                        </div>
-                    </article>
+                    </div>
 
-                    <article class="news-card community" data-category="community">
-                        <div class="card-header">
-                            <span class="category-badge community">COMMUNITY</span>
-                            <span class="card-date">May 28, 2025</span>
+                    <div class="game-card">
+                        <div class="game-badge">COMMUNITY</div>
+                        <h3>Building Our Community: Join the Conversation</h3>
+                        <p class="release-date">May 28, 2025</p>
+                        <p>We believe in the power of community feedback in game development. Learn about our plans for community engagement, beta testing opportunities, and how you can get involved in shaping our games.</p>
+                        <div class="game-links">
+                            <a href="community" class="game-button secondary">Join Community</a>
                         </div>
-                        <div class="card-content">
-                            <h3>Building Our Community: Join the Conversation</h3>
-                            <p class="card-excerpt">We believe in the power of community feedback in game development. Learn about our plans for community engagement, beta testing opportunities, and how you can get involved in shaping our games.</p>
-                            <div class="article-tags">
-                                <span class="tag">Community</span>
-                                <span class="tag">Feedback</span>
-                                <span class="tag">Engagement</span>
-                            </div>
-                            <div class="card-meta">
-                                <span class="read-time">3 min read</span>
-                            </div>
-                        </div>
-                    </article>
+                    </div>
 
-                    <article class="news-card announcements" data-category="announcements">
-                        <div class="card-header">
-                            <span class="category-badge announcement">ANNOUNCEMENT</span>
-                            <span class="card-date">May 25, 2025</span>
+                    <div class="game-card">
+                        <div class="game-badge">ANNOUNCEMENT</div>
+                        <h3>Teasing Project Steel: Our Next Adventure</h3>
+                        <p class="release-date">May 25, 2025</p>
+                        <p>Coming Soon - Stay tuned for exciting announcements about our next major gaming project that will push the boundaries of interactive entertainment.</p>
+                        <div class="game-links">
+                            <a href="#" class="game-button secondary">Learn More</a>
                         </div>
-                        <div class="card-content">
-                            <h3>Teasing Project Steel: Our Next Adventure</h3>
-                            <p class="card-excerpt">Coming Soon</p>
-                            <div class="article-tags">
-                                <span class="tag">Project Steel</span>
-                                <span class="tag">Teaser</span>
-                                <span class="tag">Action-Adventure</span>
-                            </div>
-                            <div class="card-meta">
-                                <span class="read-time">2 min read</span>
-                            </div>
-                        </div>
-                    </article>
+                    </div>
 
-                    <article class="news-card development" data-category="development">
-                        <div class="card-header">
-                            <span class="category-badge development">DEVELOPMENT</span>
-                            <span class="card-date">May 20, 2025</span>
+                    <div class="game-card">
+                        <div class="game-badge">DEVELOPMENT</div>
+                        <h3>Brainrot Battle Alpha Milestone Reached</h3>
+                        <p class="release-date">May 20, 2025</p>
+                        <p>We've reached a major milestone in Brainrot Battle's development. The alpha build is now feature-complete, and we're entering the polish and optimization phase. Beta testing opportunities coming soon!</p>
+                        <div class="game-links">
+                            <a href="brainrot-battle" class="game-button secondary">Learn More</a>
                         </div>
-                        <div class="card-content">
-                            <h3>Brainrot Battle Alpha Milestone Reached</h3>
-                            <p class="card-excerpt">We've reached a major milestone in Brainrot Battle's development. The alpha build is now feature-complete, and we're entering the polish and optimization phase. Beta testing opportunities coming soon!</p>
-                            <div class="article-tags">
-                                <span class="tag">Alpha</span>
-                                <span class="tag">Milestone</span>
-                                <span class="tag">Development Progress</span>
-                            </div>
-                            <div class="card-meta">
-                                <span class="read-time">3 min read</span>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </section>
-
-            <!-- Newsletter Signup Section -->
-            <section class="newsletter-section">
-                <div class="newsletter-card">
-                    <div class="newsletter-content">
-                        <h2>Never Miss an Update</h2>
-                        <p>Subscribe to our newsletter to get the latest news, development insights, and exclusive content delivered directly to your inbox. Be the first to know about new releases, beta testing opportunities, and behind-the-scenes content.</p>
-                        <div class="newsletter-actions">
-                            <a href="mailto:info@steelcanvas.studio?subject=Newsletter Subscription&body=I would like to subscribe to the Steel Canvas Studio newsletter for updates and announcements." class="cta-button">
-                                <span class="btn-icon">✉</span>
-                                Subscribe to Newsletter
-                            </a>
-                            <a href="mailto:press@steelcanvas.studio?subject=Press Updates" class="game-button secondary">
-                                <span class="btn-icon">📰</span>
-                                Press Updates
-                            </a>
-                        </div>
-                        <p class="newsletter-note">We respect your privacy. Unsubscribe at any time.</p>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Signup Section -->
+        <section class="contact">
+            <div class="container">
+                <h2>Stay Updated</h2>
+                <p>Never miss the latest news and development updates from Steel Canvas Studio.</p>
+                <div class="contact-cta">
+                    <div class="contact-card">
+                        <h3>Subscribe to Updates</h3>
+                        <p>Get the latest news, development insights, and exclusive content delivered directly to your inbox. Be the first to know about new releases and beta testing opportunities.</p>
+                        <a href="mailto:info@steelcanvas.studio?subject=Newsletter Subscription&body=I would like to subscribe to the Steel Canvas Studio newsletter for updates and announcements." class="contact-button">
+                            <span class="contact-icon">✉️</span>
+                            Subscribe to Newsletter
+                            <span class="contact-email">info@steelcanvas.studio</span>
+                        </a>
+                        <p class="contact-response">We respect your privacy. Unsubscribe at any time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -322,35 +250,6 @@
         </div>
     </footer>
 
-    <script>
-        // News filter functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const newsCards = document.querySelectorAll('.news-card');
-
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    // Add active class to clicked button
-                    this.classList.add('active');
-
-                    const filter = this.getAttribute('data-filter');
-
-                    newsCards.forEach(card => {
-                        if (filter === 'all') {
-                            card.style.display = 'block';
-                        } else {
-                            if (card.classList.contains(filter)) {
-                                card.style.display = 'block';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        }
-                    });
-                });
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
