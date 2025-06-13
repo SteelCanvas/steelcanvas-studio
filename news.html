@@ -111,7 +111,37 @@
                 <li><a href="support">Support</a></li>
                 <li><a href="careers">Careers</a></li>
             </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu">
+                ☰
+            </button>
         </nav>
+        
+        <!-- Mobile Navigation Overlay -->
+        <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav-menu" id="mobileNavMenu">
+            <div class="mobile-nav-header">
+                <div class="logo">
+                    <a href="/">
+                        <img src="logo.png" alt="Steel Canvas Studio Logo" class="logo-img">
+                        <h1>Steel Canvas Studio</h1>
+                    </a>
+                </div>
+                <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close mobile menu">
+                    ✕
+                </button>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="about">About</a></li>
+                <li><a href="games">Games</a></li>
+                <li><a href="news">News</a></li>
+                <li><a href="community">Community</a></li>
+                <li><a href="support">Support</a></li>
+                <li><a href="careers">Careers</a></li>
+            </ul>
+        </div>
     </header>
 
     <main>
@@ -131,9 +161,18 @@
                 <div class="games-grid">
                     <div class="game-card featured">
                         <div class="game-badge">FEATURED NEWS</div>
-                        <h3>Brainrot Battle Release Timeline</h3>
-                        <p class="release-date">June 10, 2025 - Steel Canvas Team</p>
-                        <p>We're excited to announce our release strategy for Brainrot Battle! The game will launch on July 10th, 2025 in the UK, Canada, and Australia as a soft release, allowing us to gather valuable feedback and ensure a smooth global rollout. The worldwide release will follow in September 2025, with Patreon supporters getting early access to the global version.</p>
+                        <h3>Brainrot Battle: From Concept to July 10th Release</h3>
+                        <p class="release-date">June 10, 2025 - Steel Canvas Team • 6 min read</p>
+                        <p>After months of development, we're thrilled to announce the official release strategy for Brainrot Battle, our debut title that's redefining what mobile strategy games can be.</p>
+                        
+                        <p><strong>The Release Strategy:</strong> We're taking a measured approach with a soft release on July 10th, 2025 in the UK, Canada, and Australia. This isn't just about testing servers - it's about perfecting the player experience. These regions will get first access to our crowd-running strategy hybrid that combines the instant gratification of hypercasual games with genuine strategic depth.</p>
+                        
+                        <p><strong>What Makes Brainrot Battle Different:</strong> Unlike typical mobile games that rely on predatory monetization, Brainrot Battle respects your intelligence. It's wrapped in internet culture without talking down to players, featuring strategic crowd management where every decision matters. You're not just mindlessly tapping - you're planning, adapting, and outsmarting increasingly complex scenarios.</p>
+                        
+                        <p><strong>Global Release & Early Access:</strong> The worldwide release follows in September 2025, but Patreon supporters don't have to wait. Our supporters get early access to the global version, plus the satisfaction of knowing they helped fund a game that proves mobile gaming can be better.</p>
+                        
+                        <p>This soft release approach lets us gather real player feedback, optimize performance, and ensure that when Brainrot Battle goes global, it's not just functional - it's exceptional.</p>
+                        
                         <div class="game-links">
                             <a href="brainrot-battle" class="game-button">Learn More About Brainrot Battle</a>
                         </div>
@@ -151,105 +190,134 @@
                 <div class="games-grid">
                     <div class="game-card">
                         <div class="game-badge">ANNOUNCEMENT</div>
-                        <h3>Steel Canvas Studio Officially Launched</h3>
-                        <p class="release-date">June 8, 2025</p>
-                        <p>Today marks the official launch of Steel Canvas Studio. We're an independent game development company focused on creating innovative and engaging gaming experiences that push the boundaries of interactive entertainment.</p>
-                        <div class="game-links">
-                            <a href="#" class="game-button secondary">Read More</a>
-                        </div>
+                        <h3>Steel Canvas Studio: Why We Started and What We Stand For</h3>
+                        <p class="release-date">June 8, 2025 • 4 min read</p>
+                        <p>Today marks the official launch of Steel Canvas Studio, but our story began with frustration - frustration with an industry that seemed to have forgotten what gaming was supposed to be about.</p>
+                        
+                        <p><strong>The Breaking Point:</strong> Picture this: I'm sitting in my apartment, having just rage-quit another mobile game after hitting yet another paywall. Thirty seconds of gameplay, then a request for $4.99 to continue. That's when it hit me - this isn't gaming, this is exploitation.</p>
+                        
+                        <p><strong>Our Mission:</strong> Steel Canvas Studio exists to prove that mobile games can have depth without dark patterns, strategy without predatory monetization, and respect for players without sacrificing profitability. We're building games for people who are tired of being treated like walking wallets.</p>
+                        
+                        <p><strong>What Makes Us Different:</strong> We're starting small but thinking big. Every decision we make prioritizes player experience over quick profits. Every feature we add asks "Does this make the game better?" not "Does this make us more money?"</p>
+                        
+                        <p>This is just the beginning. Welcome to Steel Canvas Studio - where games respect players, and players actually matter.</p>
                     </div>
 
                     <div class="game-card">
                         <div class="game-badge">DEVELOPMENT</div>
-                        <h3>Behind the Scenes: Brainrot Battle's Puzzle Design</h3>
-                        <p class="release-date">June 5, 2025</p>
-                        <p>Take a look at our design process for creating challenging yet accessible puzzles in Brainrot Battle. Our team shares insights into balancing difficulty curves and maintaining player engagement throughout the experience.</p>
-                        <div class="game-links">
-                            <a href="#" class="game-button secondary">Read More</a>
-                        </div>
+                        <h3>Designing Brainrot Battle: Strategy Meets Internet Culture</h3>
+                        <p class="release-date">June 5, 2025 • 5 min read</p>
+                        <p>How do you create a strategy game that's both instantly accessible and deeply engaging? For Brainrot Battle, we started with a simple principle: respect the player's intelligence.</p>
+                        
+                        <p><strong>The Core Concept:</strong> Brainrot Battle combines crowd-running mechanics with strategic decision-making. Players manage growing crowds while navigating increasingly complex scenarios that require real planning and adaptation. It's hypercasual on the surface, strategic at its core.</p>
+                        
+                        <p><strong>Internet Culture Integration:</strong> We wrapped the mechanics in internet culture without being condescending. The "brainrot" theme isn't about dumbing things down - it's about acknowledging the chaotic, meme-driven world we live in while delivering genuine gameplay depth.</p>
+                        
+                        <p><strong>Balancing Act:</strong> The biggest challenge was creating difficulty curves that ramp up naturally. Early levels teach core mechanics through play, not tutorials. Advanced levels require genuine strategic thinking. No artificial difficulty spikes, no pay-to-win shortcuts.</p>
+                        
+                        <p><strong>Player Testing:</strong> Every mechanic has been tested extensively with real players. We've iterated on feedback, refined interactions, and polished until every tap feels intentional and rewarding.</p>
+                        
+                        <p>The result is a game that proves mobile gaming can be both accessible and intelligent - exactly what the industry needs.</p>
                     </div>
 
                     <div class="game-card">
                         <div class="game-badge">DEVELOPMENT</div>
-                        <h3>Our Technology Stack and Development Tools</h3>
-                        <p class="release-date">June 1, 2025</p>
-                        <p>Learn about the technology and tools we use at Steel Canvas Studio to create our games. From Unity to version control systems, we share our complete development workflow and the decisions behind our tech choices.</p>
-                        <div class="game-links">
-                            <a href="#" class="game-button secondary">Read More</a>
-                        </div>
+                        <h3>Our Solo Dev Setup: Building Games on Coffee and Determination</h3>
+                        <p class="release-date">June 1, 2025 • 3 min read</p>
+                        <p>Ever wondered how a solo developer builds games while dreaming of becoming the next big indie studio? Here's an honest look at our current setup and workflow.</p>
+                        
+                        <p><strong>The Technical Stack:</strong> Unity for game development, Visual Studio Code for scripting, Git for version control, and way too many browser tabs open for research. Nothing fancy - just reliable tools that get the job done without breaking the (nonexistent) budget.</p>
+                        
+                        <p><strong>Development Environment:</strong> One laptop, one monitor, a mechanical keyboard that's probably too loud for the neighbors, and a coffee maker that works overtime. The glamorous life of indie game development.</p>
+                        
+                        <p><strong>Workflow Reality:</strong> Mornings for coding (brain is sharpest), afternoons for art and design, evenings for testing and iteration. Weekends for the stuff that didn't get done during the week. Sleep is optional.</p>
+                        
+                        <p><strong>Asset Creation:</strong> Everything from UI design to basic art assets gets created in-house. Learning new skills as needed because hiring isn't in the budget yet. YouTube University has been invaluable.</p>
+                        
+                        <p>It's not the biggest setup, but it's ours. And it's building something we believe in.</p>
                     </div>
 
                     <div class="game-card">
                         <div class="game-badge">COMMUNITY</div>
-                        <h3>Building Our Community: Join the Conversation</h3>
-                        <p class="release-date">May 28, 2025</p>
-                        <p>We believe in the power of community feedback in game development. Learn about our plans for community engagement, beta testing opportunities, and how you can get involved in shaping our games.</p>
-                        <div class="game-links">
-                            <a href="community" class="game-button secondary">Join Community</a>
-                        </div>
+                        <h3>Building Community Before Launch: Why Your Voice Matters</h3>
+                        <p class="release-date">May 28, 2025 • 3 min read</p>
+                        <p>Most studios build games first, then find players. We're doing it backwards - building community first because games are better when players help shape them.</p>
+                        
+                        <p><strong>Community-Driven Development:</strong> Your feedback directly influences our games. Not just bug reports - actual feature discussions, mechanic suggestions, and design input. We're small enough to be agile and responsive to what players actually want.</p>
+                        
+                        <p><strong>Early Access Philosophy:</strong> Patreon supporters don't just get early access - they get input access. You're not just playing games, you're helping build them. Your support funds development, but your feedback guides it.</p>
+                        
+                        <p><strong>Transparency Promise:</strong> We share both successes and failures openly. Development updates, financial transparency, honest discussions about challenges. No corporate PR speak - just real talk about indie game development.</p>
+                        
+                        <p><strong>Multiple Platforms:</strong> Whether you prefer Discord for real-time chat, Reddit for discussions, or social media for quick updates, we're meeting you where you are.</p>
+                        
+                        <p>This isn't just about building an audience - it's about building something together.</p>
                     </div>
 
                     <div class="game-card">
                         <div class="game-badge">ANNOUNCEMENT</div>
-                        <h3>Teasing Project Steel: Our Next Adventure</h3>
-                        <p class="release-date">May 25, 2025</p>
-                        <p>Coming Soon - Stay tuned for exciting announcements about our next major gaming project that will push the boundaries of interactive entertainment.</p>
-                        <div class="game-links">
-                            <a href="#" class="game-button secondary">Learn More</a>
-                        </div>
+                        <h3>Tower Defense Game Announced: Strategic Depth Returns</h3>
+                        <p class="release-date">May 25, 2025 • 2 min read</p>
+                        <p>Our second project is officially a tower defense game, but not the kind you've played before. We're bringing strategic depth back to a genre that's been simplified into oblivion.</p>
+                        
+                        <p><strong>The Vision:</strong> Traditional tower defense meets modern innovation. Think classic strategic planning with fresh mechanics that reward smart thinking over mindless upgrading. Every tower placement matters, every upgrade decision has consequences.</p>
+                        
+                        <p><strong>What's Different:</strong> No arbitrary difficulty spikes, no pay-to-win towers, no energy systems that stop you from playing. Just pure strategic gameplay that respects your time and intelligence.</p>
+                        
+                        <p><strong>Patreon Voting:</strong> Here's where it gets interesting - our supporters get to vote on the final name! Multiple options will be presented, and the community chooses what our tower defense game becomes.</p>
+                        
+                        <p><strong>Development Timeline:</strong> Currently in early conceptual development with a target release of 2026. More details, screenshots, and gameplay footage coming as development progresses.</p>
+                        
+                        <p>Ready to help shape the future of tower defense? Join our Patreon to vote on the name and influence development.</p>
                     </div>
 
                     <div class="game-card">
                         <div class="game-badge">DEVELOPMENT</div>
-                        <h3>Brainrot Battle Alpha Milestone Reached</h3>
-                        <p class="release-date">May 20, 2025</p>
-                        <p>We've reached a major milestone in Brainrot Battle's development. The alpha build is now feature-complete, and we're entering the polish and optimization phase. Beta testing opportunities coming soon!</p>
-                        <div class="game-links">
-                            <a href="brainrot-battle" class="game-button secondary">Learn More</a>
-                        </div>
+                        <h3>Brainrot Battle Alpha Complete: From Prototype to Polish</h3>
+                        <p class="release-date">May 20, 2025 • 4 min read</p>
+                        <p>After months of development, Brainrot Battle's alpha build is feature-complete. Here's what that actually means and what comes next in our journey to July 10th.</p>
+                        
+                        <p><strong>Alpha Milestone Achieved:</strong> All core mechanics are implemented and functional. The crowd-running strategy hybrid works as intended, difficulty curves are properly balanced, and the internet culture theming feels authentic rather than forced.</p>
+                        
+                        <p><strong>What "Feature-Complete" Means:</strong> Every planned gameplay element is in and working. No more major feature additions - just optimization, polish, and refinement. The game you'll play on July 10th is essentially complete; we're just making it shine.</p>
+                        
+                        <p><strong>Testing Phase Begins:</strong> Internal testing has shifted to external feedback. Close supporters and testers are providing valuable input on difficulty balance, UI clarity, and overall game feel. Every piece of feedback gets evaluated and implemented where it improves the experience.</p>
+                        
+                        <p><strong>Performance Optimization:</strong> The next phase focuses on making sure Brainrot Battle runs smoothly on a wide range of devices. Loading times, frame rates, and battery consumption are all getting attention.</p>
+                        
+                        <p><strong>Beta Testing Soon:</strong> Limited beta testing opportunities will be available for Patreon supporters before the soft release. This is your chance to experience the game and provide final feedback before it goes live.</p>
+                        
+                        <p>We're in the home stretch. July 10th is coming fast, and Brainrot Battle is ready to prove that mobile games can be better.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Newsletter Signup Section -->
-        <section class="contact">
-            <div class="container">
-                <h2>Stay Updated</h2>
-                <p>Never miss the latest news and development updates from Steel Canvas Studio.</p>
-                <div class="contact-cta">
-                    <div class="contact-card">
-                        <h3>Subscribe to Updates</h3>
-                        <p>Get the latest news, development insights, and exclusive content delivered directly to your inbox. Be the first to know about new releases and beta testing opportunities.</p>
-                        <a href="mailto:info@steelcanvas.studio?subject=Newsletter Subscription&body=I would like to subscribe to the Steel Canvas Studio newsletter for updates and announcements." class="contact-button">
-                            <span class="contact-icon">✉️</span>
-                            Subscribe to Newsletter
-                            <span class="contact-email">info@steelcanvas.studio</span>
-                        </a>
-                        <p class="contact-response">We respect your privacy. Unsubscribe at any time.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
-    <footer>
+    <!-- Footer Section -->
+    <section class="contact">
         <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2025 Steel Canvas Studio. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="copyright">Copyright</a>
-                    <a href="terms">Terms</a>
-                    <a href="privacy">Privacy</a>
-                    <a href="security">Security</a>
-                    <a href="status">Status</a>
-                    <a href="docs">Docs</a>
-                    <a href="mailto:contact@steelcanvas.studio">Contact</a>
-                    <a href="cookies">Manage Cookies</a>
+            <h2>Steel Canvas Studio</h2>
+            <p>Crafting immersive gaming experiences with passion and innovation.</p>
+            <div class="contact-cta">
+                <div class="contact-card">
+                    <h3>Legal & Information</h3>
+                    <div class="game-links" style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                        <a href="copyright" class="game-button secondary">Copyright</a>
+                        <a href="terms" class="game-button secondary">Terms</a>
+                        <a href="privacy" class="game-button secondary">Privacy</a>
+                        <a href="security" class="game-button secondary">Security</a>
+                        <a href="status" class="game-button secondary">Status</a>
+                        <a href="docs" class="game-button secondary">Docs</a>
+                        <a href="mailto:contact@steelcanvas.studio" class="game-button secondary">Contact</a>
+                        <a href="cookies" class="game-button secondary">Manage Cookies</a>
+                    </div>
+                    <p class="contact-response">&copy; 2025 Steel Canvas Studio. All rights reserved.</p>
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
 
     <script src="script.js"></script>
 </body>

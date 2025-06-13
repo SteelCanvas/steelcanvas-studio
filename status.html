@@ -49,25 +49,55 @@
                 <li><a href="support">Support</a></li>
                 <li><a href="careers">Careers</a></li>
             </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu">
+                ☰
+            </button>
         </nav>
+        
+        <!-- Mobile Navigation Overlay -->
+        <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav-menu" id="mobileNavMenu">
+            <div class="mobile-nav-header">
+                <div class="logo">
+                    <a href="/">
+                        <img src="logo.png" alt="Steel Canvas Studio Logo" class="logo-img">
+                        <h1>Steel Canvas Studio</h1>
+                    </a>
+                </div>
+                <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close mobile menu">
+                    ✕
+                </button>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="about">About</a></li>
+                <li><a href="games">Games</a></li>
+                <li><a href="news">News</a></li>
+                <li><a href="community">Community</a></li>
+                <li><a href="support">Support</a></li>
+                <li><a href="careers">Careers</a></li>
+            </ul>
+        </div>
     </header>
 
-    <main class="status-page">
-        <div class="container">
-            <section class="status-content">
-                <h1>Service Status</h1>
-                <p class="status-summary">All systems operational</p>
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Service Status</h2>
+                <p>Monitor the real-time status of Steel Canvas Studio services and infrastructure.</p>
+                <a href="#current-status" class="cta-button">View Status</a>
+            </div>
+        </section>
+
+        <section id="current-status" class="games">
+            <div class="container">
+                <h2>All Systems Operational</h2>
+                <p style="text-align: center; margin-bottom: 2rem; color: #4CAF50; font-size: 1.2rem; font-weight: 600;">All systems operational</p>
                 
-                <div class="status-overview">
-                    <div class="status-indicator operational">
-                        <span class="status-dot"></span>
-                        <span>All Systems Operational</span>
-                    </div>
-                </div>
-                
-                <h2>Current Status</h2>
-                <div class="services-grid">
-                    <div class="service-card">
+                <div class="games-grid">
+                    <div class="game-card">
                         <div class="service-header">
                             <h3>Website</h3>
                             <span class="status-badge operational">Operational</span>
@@ -75,7 +105,7 @@
                         <p>Main website and landing pages</p>
                     </div>
                     
-                    <div class="service-card">
+                    <div class="game-card">
                         <div class="service-header">
                             <h3>Game Services</h3>
                             <span class="status-badge operational">Operational</span>
@@ -83,7 +113,7 @@
                         <p>Game downloads and updates</p>
                     </div>
                     
-                    <div class="service-card">
+                    <div class="game-card">
                         <div class="service-header">
                             <h3>User Accounts</h3>
                             <span class="status-badge operational">Operational</span>
@@ -91,7 +121,7 @@
                         <p>Authentication and user management</p>
                     </div>
                     
-                    <div class="service-card">
+                    <div class="game-card">
                         <div class="service-header">
                             <h3>Support System</h3>
                             <span class="status-badge operational">Operational</span>
@@ -99,7 +129,7 @@
                         <p>Customer support and ticketing</p>
                     </div>
                     
-                    <div class="service-card">
+                    <div class="game-card">
                         <div class="service-header">
                             <h3>Payment Processing</h3>
                             <span class="status-badge operational">Operational</span>
@@ -107,7 +137,7 @@
                         <p>Purchase transactions and billing</p>
                     </div>
                     
-                    <div class="service-card">
+                    <div class="game-card">
                         <div class="service-header">
                             <h3>API Services</h3>
                             <span class="status-badge operational">Operational</span>
@@ -158,22 +188,29 @@
         </div>
     </main>
 
-    <footer>
+    <!-- Footer Section -->
+    <section class="contact">
         <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2025 Steel Canvas Studio. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="copyright">Copyright</a>
-                    <a href="terms">Terms</a>
-                    <a href="privacy">Privacy</a>
-                    <a href="security">Security</a>
-                    <a href="status">Status</a>
-                    <a href="docs">Docs</a>
-                    <a href="mailto:contact@steelcanvas.studio">Contact</a>
-                    <a href="cookies">Manage Cookies</a>
+            <h2>Steel Canvas Studio</h2>
+            <p>Crafting immersive gaming experiences with passion and innovation.</p>
+            <div class="contact-cta">
+                <div class="contact-card">
+                    <h3>Legal & Information</h3>
+                    <div class="game-links" style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                        <a href="copyright" class="game-button secondary">Copyright</a>
+                        <a href="terms" class="game-button secondary">Terms</a>
+                        <a href="privacy" class="game-button secondary">Privacy</a>
+                        <a href="security" class="game-button secondary">Security</a>
+                        <a href="status" class="game-button secondary">Status</a>
+                        <a href="docs" class="game-button secondary">Docs</a>
+                        <a href="mailto:contact@steelcanvas.studio" class="game-button secondary">Contact</a>
+                        <a href="cookies" class="game-button secondary">Manage Cookies</a>
+                    </div>
+                    <p class="contact-response">&copy; 2025 Steel Canvas Studio. All rights reserved.</p>
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
+    <script src="script.js"></script>
 </body>
 </html>

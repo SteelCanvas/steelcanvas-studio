@@ -20,15 +20,27 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Mobile menu event listeners
     if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', openMobileMenu);
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            openMobileMenu();
+        });
     }
     
     if (mobileCloseBtn) {
-        mobileCloseBtn.addEventListener('click', closeMobileMenu);
+        mobileCloseBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeMobileMenu();
+        });
     }
     
     if (mobileNavOverlay) {
-        mobileNavOverlay.addEventListener('click', closeMobileMenu);
+        mobileNavOverlay.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeMobileMenu();
+        });
     }
     
     // Close mobile menu when clicking on navigation links

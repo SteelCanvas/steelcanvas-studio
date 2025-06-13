@@ -63,7 +63,37 @@
                 <li><a href="support">Support</a></li>
                 <li><a href="careers" class="active">Careers</a></li>
             </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu">
+                ☰
+            </button>
         </nav>
+        
+        <!-- Mobile Navigation Overlay -->
+        <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav-menu" id="mobileNavMenu">
+            <div class="mobile-nav-header">
+                <div class="logo">
+                    <a href="/">
+                        <img src="logo.png" alt="Steel Canvas Studio Logo" class="logo-img">
+                        <h1>Steel Canvas Studio</h1>
+                    </a>
+                </div>
+                <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close mobile menu">
+                    ✕
+                </button>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="about">About</a></li>
+                <li><a href="games">Games</a></li>
+                <li><a href="news">News</a></li>
+                <li><a href="community">Community</a></li>
+                <li><a href="support">Support</a></li>
+                <li><a href="careers" class="active">Careers</a></li>
+            </ul>
+        </div>
     </header>
 
     <main>
@@ -192,10 +222,6 @@
                         <h3>3️⃣ Interview</h3>
                         <p>If you're a good fit, we'll schedule a casual video call to discuss your background, interests, and the role.</p>
                     </div>
-                    <div class="game-card">
-                        <h3>4️⃣ Trial Project</h3>
-                        <p>For some roles, we may offer a small paid trial project to see how we work together before making it official.</p>
-                    </div>
                 </div>
             </div>
         </section>
@@ -221,6 +247,14 @@
                         <h3>🎯 Player-First Mentality</h3>
                         <p>You believe games should respect players, not exploit them. You're committed to creating fair, engaging experiences.</p>
                     </div>
+                    <div class="game-card">
+                        <h3>🗣️ Strong Communication</h3>
+                        <p>You can clearly express ideas, provide constructive feedback, and collaborate effectively with team members across different disciplines.</p>
+                    </div>
+                    <div class="game-card">
+                        <h3>⚡ Adaptability</h3>
+                        <p>You thrive in a fast-paced startup environment where priorities can shift and wearing multiple hats is the norm.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -243,10 +277,6 @@
                     <div class="game-card">
                         <h3>🏆 Recognition</h3>
                         <p><strong>Always:</strong> Full credit in games, portfolio pieces you can be proud of, and the experience of building something from the ground up.</p>
-                    </div>
-                    <div class="game-card">
-                        <h3>🌟 Equity Potential</h3>
-                        <p><strong>Long-term:</strong> As Steel Canvas Studio grows, we plan to offer equity or profit-sharing to core team members who help build our success.</p>
                     </div>
                 </div>
             </div>
@@ -273,22 +303,30 @@
         </section>
     </main>
 
-    <footer>
+    <!-- Footer Section -->
+    <section class="contact">
         <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2025 Steel Canvas Studio. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="copyright">Copyright</a>
-                    <a href="terms">Terms</a>
-                    <a href="privacy">Privacy</a>
-                    <a href="security">Security</a>
-                    <a href="status">Status</a>
-                    <a href="docs">Docs</a>
-                    <a href="mailto:contact@steelcanvas.studio">Contact</a>
-                    <a href="cookies">Manage Cookies</a>
+            <h2>Steel Canvas Studio</h2>
+            <p>Crafting immersive gaming experiences with passion and innovation.</p>
+            <div class="contact-cta">
+                <div class="contact-card">
+                    <h3>Legal & Information</h3>
+                    <div class="game-links" style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                        <a href="copyright" class="game-button secondary">Copyright</a>
+                        <a href="terms" class="game-button secondary">Terms</a>
+                        <a href="privacy" class="game-button secondary">Privacy</a>
+                        <a href="security" class="game-button secondary">Security</a>
+                        <a href="status" class="game-button secondary">Status</a>
+                        <a href="docs" class="game-button secondary">Docs</a>
+                        <a href="mailto:contact@steelcanvas.studio" class="game-button secondary">Contact</a>
+                        <a href="cookies" class="game-button secondary">Manage Cookies</a>
+                    </div>
+                    <p class="contact-response">&copy; 2025 Steel Canvas Studio. All rights reserved.</p>
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
+
+    <script src="script.js"></script>
 </body>
 </html>

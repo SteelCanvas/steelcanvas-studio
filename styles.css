@@ -497,6 +497,10 @@ footer a:hover {
     padding: 8px;
     border-radius: 4px;
     transition: all 0.3s ease;
+    z-index: 1001;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 .mobile-menu-btn:hover {
@@ -610,7 +614,13 @@ footer a:hover {
 
 @media (max-width: 768px) {
     .mobile-menu-btn {
-        display: block;
+        display: flex !important;
+        background: rgba(192, 192, 192, 0.1);
+        border: 1px solid #708090;
+        min-width: 44px;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
     }
     
     .nav-links {
@@ -618,7 +628,7 @@ footer a:hover {
     }
     
     .mobile-nav-overlay {
-        display: block;
+        display: block !important;
     }
     
     .hero h2 {
