@@ -118,7 +118,37 @@
                 <li><a href="support">Support</a></li>
                 <li><a href="careers">Careers</a></li>
             </ul>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle mobile menu">
+                ☰
+            </button>
         </nav>
+        
+        <!-- Mobile Navigation Overlay -->
+        <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+        
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav-menu" id="mobileNavMenu">
+            <div class="mobile-nav-header">
+                <div class="logo">
+                    <a href="/">
+                        <img src="logo.png" alt="Steel Canvas Studio Logo" class="logo-img">
+                        <h1>Steel Canvas Studio</h1>
+                    </a>
+                </div>
+                <button class="mobile-close-btn" id="mobileCloseBtn" aria-label="Close mobile menu">
+                    ✕
+                </button>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="about">About</a></li>
+                <li><a href="games" class="active">Games</a></li>
+                <li><a href="news">News</a></li>
+                <li><a href="community">Community</a></li>
+                <li><a href="support">Support</a></li>
+                <li><a href="careers">Careers</a></li>
+            </ul>
+        </div>
     </header>
 
     <main>
@@ -149,19 +179,27 @@
                         </div>
                     </div>
                     <div class="game-card">
-                        <h3>Project Steel</h3>
+                        <div class="game-badge">TOWER DEFENSE</div>
+                        <h3>🗡️ Coming Soon - Tower Defense</h3>
                         <p class="release-date">In Development - TBA 2026</p>
-                        <p>Coming Soon</p>
+                        <p>Strategic tower defense with a twist! Deploy towers, upgrade defenses, and protect your steel fortress from waves of enemies. This isn't your typical tower defense - expect innovative mechanics and deep strategic gameplay.</p>
+                        <div style="margin: 1rem 0; padding: 1rem; background: rgba(192, 192, 192, 0.1); border-left: 4px solid #C0C0C0; border-radius: 4px;">
+                            <p style="color: #C0C0C0; font-weight: bold; margin: 0; font-size: 0.9rem;">🗳️ Patreon supporters get to vote on the final game name!</p>
+                        </div>
                         <div class="game-links">
-                            <a href="mailto:info@steelcanvas.studio?subject=Project Steel - Information" class="game-button secondary">Learn More</a>
+                            <a href="https://www.patreon.com/SteelCanvasStudio" class="game-button secondary" target="_blank" rel="noopener">Vote on Name</a>
                         </div>
                     </div>
                     <div class="game-card">
-                        <h3>Canvas Quest</h3>
+                        <div class="game-badge">MYSTERY GENRE</div>
+                        <h3>🎮 Coming Soon - Untitled Project</h3>
                         <p class="release-date">Early Development - TBA</p>
-                        <p>Coming Soon</p>
+                        <p>Our next gaming experience is currently in early development. Genre, mechanics, and theme are still being finalized. Stay tuned for updates as we reveal more about this exciting project!</p>
+                        <div style="margin: 1rem 0; padding: 1rem; background: rgba(192, 192, 192, 0.1); border-left: 4px solid #C0C0C0; border-radius: 4px;">
+                            <p style="color: #C0C0C0; font-weight: bold; margin: 0; font-size: 0.9rem;">🗳️ Patreon supporters will vote on this game's name too!</p>
+                        </div>
                         <div class="game-links">
-                            <a href="mailto:info@steelcanvas.studio?subject=Canvas Quest - Interest" class="game-button secondary">Show Interest</a>
+                            <a href="https://www.patreon.com/SteelCanvasStudio" class="game-button secondary" target="_blank" rel="noopener">Help Choose Name</a>
                         </div>
                     </div>
                 </div>
