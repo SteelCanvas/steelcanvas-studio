@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    
     // Close mobile menu on escape key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
