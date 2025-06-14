@@ -598,6 +598,38 @@ const VisualFlowEffects = {
         }
     };
     
+    // Create visible test button for mobile debugging
+    function createTestButton() {
+        const testBtn = document.createElement('button');
+        testBtn.textContent = 'TEST MENU';
+        testBtn.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            background: #ff0000;
+            color: white;
+            border: 3px solid yellow;
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        `;
+        testBtn.onclick = function() {
+            const menu = document.getElementById('mobileNavMenu');
+            if (menu) {
+                menu.classList.toggle('active');
+                testBtn.textContent = menu.classList.contains('active') ? 'CLOSE MENU' : 'TEST MENU';
+            }
+        };
+        document.body.appendChild(testBtn);
+    }
+    
+    // Only show test button on mobile
+    if (window.innerWidth <= 768) {
+        createTestButton();
+    }
+    
     // Initialize
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', createMobileNav);
