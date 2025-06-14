@@ -530,10 +530,67 @@ const VisualFlowEffects = {
     }
 };
 
+// Simple Mobile Navigation (Fallback)
+function initSimpleMobileNav() {
+    console.log('Initializing simple mobile navigation...');
+    
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileNavMenu');
+    
+    console.log('Simple nav elements:', { mobileBtn, mobileMenu });
+    
+    if (mobileBtn && mobileMenu) {
+        console.log('Setting up simple mobile navigation...');
+        
+        mobileBtn.addEventListener('click', function(e) {
+            console.log('Simple mobile button clicked!');
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const isActive = mobileMenu.classList.contains('active');
+            console.log('Menu currently active:', isActive);
+            
+            if (isActive) {
+                mobileMenu.classList.remove('active');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+                console.log('Menu closed');
+            } else {
+                mobileMenu.classList.add('active');
+                mobileBtn.setAttribute('aria-expanded', 'true');
+                console.log('Menu opened');
+            }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mobileBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.remove('active');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+        
+        // Close menu when clicking nav links
+        const navLinks = mobileMenu.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                mobileBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+        
+        console.log('Simple mobile navigation setup complete!');
+    } else {
+        console.error('Simple mobile nav elements not found!');
+    }
+}
+
 // Main Application Initialization
 document.addEventListener('DOMContentLoaded', () => {
     try {
-        // Initialize all modules
+        // Initialize simple mobile navigation first
+        initSimpleMobileNav();
+        
+        // Initialize other modules
         MobileNavigation.init();
         SmoothScrolling.init();
         HeaderEffects.init();
