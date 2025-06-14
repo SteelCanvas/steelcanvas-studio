@@ -534,6 +534,24 @@ const VisualFlowEffects = {
 (function() {
     console.log('🔧 IMMEDIATE: Setting up mobile navigation...');
     
+    // Test function to force menu visibility
+    window.testMobileMenu = function() {
+        const menu = document.getElementById('mobileNavMenu');
+        if (menu) {
+            menu.classList.add('active');
+            menu.style.display = 'block';
+            menu.style.opacity = '1';
+            menu.style.visibility = 'visible';
+            menu.style.background = 'red';
+            menu.style.border = '3px solid yellow';
+            menu.style.position = 'fixed';
+            menu.style.top = '100px';
+            menu.style.right = '10px';
+            menu.style.zIndex = '9999';
+            console.log('🧪 TEST: Forced menu to be visible with red background');
+        }
+    };
+    
     function setupMobileNav() {
         console.log('🔍 SEARCHING: Looking for mobile nav elements...');
         const mobileBtn = document.getElementById('mobileMenuBtn');

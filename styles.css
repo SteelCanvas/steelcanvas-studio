@@ -1031,9 +1031,12 @@ footer a:hover {
     }
     
     .mobile-nav-menu.active {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+        display: block !important;
+        background: red !important; /* Temporary - make it obvious */
+        border: 3px solid yellow !important; /* Temporary - make it obvious */
     }
     
     .hero h2 {
