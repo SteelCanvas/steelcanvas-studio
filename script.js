@@ -223,42 +223,73 @@ const MobileNavigation = {
     },
 
     /**
-     * Open mobile navigation menu with accessibility support
+     * Open mobile navigation dropdown with accessibility support
      * @param {Object} elements - Navigation elements
      */
     open: (elements) => {
-        if (elements.overlay && elements.menu) {
-            elements.overlay.classList.add('active');
+        if (elements.menu) {
             elements.menu.classList.add('active');
-            SteelCanvasUtils.UI.toggleBodyOverflow(true);
             
             // Update ARIA attributes for accessibility
             if (elements.menuBtn) elements.menuBtn.setAttribute('aria-expanded', 'true');
-            if (elements.overlay) elements.overlay.setAttribute('aria-hidden', 'false');
             if (elements.menu) elements.menu.setAttribute('aria-hidden', 'false');
             
-            // Focus management
-            if (elements.closeBtn) elements.closeBtn.focus();
+            // Add click-outside listener to close menu
+            setTimeout(() => {
+                document.addEventListener('click', MobileNavigation._handleClickOutside);
+            }, 10);
         }
     },
 
     /**
-     * Close mobile navigation menu with accessibility support
+     * Close mobile navigation dropdown with accessibility support
      * @param {Object} elements - Navigation elements
      */
     close: (elements) => {
-        if (elements.overlay && elements.menu) {
-            elements.overlay.classList.remove('active');
+        if (elements.menu) {
             elements.menu.classList.remove('active');
-            SteelCanvasUtils.UI.toggleBodyOverflow(false);
             
             // Update ARIA attributes for accessibility
             if (elements.menuBtn) elements.menuBtn.setAttribute('aria-expanded', 'false');
-            if (elements.overlay) elements.overlay.setAttribute('aria-hidden', 'true');
             if (elements.menu) elements.menu.setAttribute('aria-hidden', 'true');
             
-            // Return focus to menu button
-            if (elements.menuBtn) elements.menuBtn.focus();
+            // Remove click-outside listener
+            document.removeEventListener('click', MobileNavigation._handleClickOutside);
+        }
+    },
+
+    /**
+     * Toggle mobile navigation menu state
+     * @param {Object} elements - Navigation elements
+     */
+    toggle: (elements) => {
+        const isOpen = elements.menu && elements.menu.classList.contains('active');
+        
+        if (isOpen) {
+            MobileNavigation.close(elements);
+        } else {
+            MobileNavigation.open(elements);
+        }
+    },
+
+    /**
+     * Handle clicks outside the mobile menu to close it
+     * @param {Event} e - Click event
+     */
+    _handleClickOutside: (e) => {
+        const menu = SteelCanvasUtils.DOM.select('#mobileNavMenu');
+        const menuBtn = SteelCanvasUtils.DOM.select('#mobileMenuBtn');
+        
+        if (menu && menuBtn && 
+            !menu.contains(e.target) && 
+            !menuBtn.contains(e.target) && 
+            menu.classList.contains('active')) {
+            
+            const elements = {
+                menuBtn: menuBtn,
+                menu: menu
+            };
+            MobileNavigation.close(elements);
         }
     },
 
@@ -268,30 +299,23 @@ const MobileNavigation = {
      * @private
      */
     _bindEvents: (elements) => {
-        // Open menu button
-        SteelCanvasUtils.DOM.addEvent(elements.menuBtn, 'click', (e) => {
-            SteelCanvasUtils.Events.preventDefault(e);
-            MobileNavigation.open(elements);
-        });
-
-        // Close menu button
-        SteelCanvasUtils.DOM.addEvent(elements.closeBtn, 'click', (e) => {
-            SteelCanvasUtils.Events.preventDefault(e);
-            MobileNavigation.close(elements);
-        });
-
-        // Overlay click to close
-        SteelCanvasUtils.DOM.addEvent(elements.overlay, 'click', (e) => {
-            SteelCanvasUtils.Events.preventDefault(e);
-            MobileNavigation.close(elements);
-        });
+        // Menu toggle button
+        if (elements.menuBtn) {
+            SteelCanvasUtils.DOM.addEvent(elements.menuBtn, 'click', (e) => {
+                SteelCanvasUtils.Events.preventDefault(e);
+                e.stopPropagation();
+                MobileNavigation.toggle(elements);
+            });
+        }
 
         // Close menu when clicking navigation links
-        elements.links.forEach(link => {
-            SteelCanvasUtils.DOM.addEvent(link, 'click', () => {
-                MobileNavigation.close(elements);
+        if (elements.links && elements.links.length > 0) {
+            elements.links.forEach(link => {
+                SteelCanvasUtils.DOM.addEvent(link, 'click', () => {
+                    MobileNavigation.close(elements);
+                });
             });
-        });
+        }
 
         // Close menu on escape key
         SteelCanvasUtils.DOM.addEvent(document, 'keydown', (e) => {

@@ -371,6 +371,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: var(--space-md) var(--space-xl);
+    position: relative;
 }
 
 .logo {
@@ -919,78 +920,45 @@ footer a:hover {
 
 .mobile-nav-overlay {
     display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 999;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.mobile-nav-overlay.active {
-    opacity: 1;
 }
 
 .mobile-nav-menu {
-    position: fixed;
-    top: 0;
-    right: -100%;
+    position: absolute;
+    top: 100%;
+    right: 0;
     width: 280px;
-    height: 100%;
+    max-width: 90vw;
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-    border-left: 2px solid #708090;
+    backdrop-filter: blur(10px);
+    border: 2px solid #708090;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     z-index: 1000;
-    transition: right 0.3s ease;
-    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
 }
 
 .mobile-nav-menu.active {
-    right: 0;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .mobile-nav-header {
-    padding: 2rem 1.5rem 1rem;
-    border-bottom: 1px solid #708090;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.mobile-nav-header .logo {
-    gap: 8px;
-}
-
-.mobile-nav-header .logo h1 {
-    font-size: 1.4rem;
-}
-
-.mobile-nav-header .logo-img {
-    height: 35px;
+    display: none; /* Hide the header for dropdown style */
 }
 
 .mobile-close-btn {
-    background: none;
-    border: none;
-    color: #C0C0C0;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-.mobile-close-btn:hover {
-    background: rgba(192, 192, 192, 0.1);
-    transform: scale(1.1);
+    display: none; /* Hide close button for dropdown style */
 }
 
 .mobile-nav-links {
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     list-style: none;
+    margin: 0;
 }
 
 .mobile-nav-links li {
@@ -999,26 +967,30 @@ footer a:hover {
 
 .mobile-nav-links a {
     display: block;
-    color: #A9A9A9;
+    color: #e8e8e8;
     text-decoration: none;
-    padding: 1rem 1.5rem;
+    padding: 0.75rem 1.25rem;
     font-weight: 500;
-    font-size: 1.1rem;
+    font-size: 1rem;
     border-bottom: 1px solid rgba(112, 128, 144, 0.1);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.mobile-nav-links li:last-child a {
+    border-bottom: none;
 }
 
 .mobile-nav-links a:hover {
-    color: #C0C0C0;
-    background: rgba(192, 192, 192, 0.05);
-    padding-left: 2rem;
+    color: #ff6b47;
+    background: rgba(255, 107, 71, 0.1);
+    transform: translateX(5px);
 }
 
 .mobile-nav-links a.active {
-    color: #C0C0C0;
-    background: rgba(112, 128, 144, 0.2);
+    color: #ff6b47;
+    background: rgba(255, 107, 71, 0.15);
     font-weight: 600;
-    border-left: 4px solid #C0C0C0;
 }
 
 @media (max-width: 768px) {
@@ -1030,14 +1002,21 @@ footer a:hover {
         min-height: 44px;
         align-items: center;
         justify-content: center;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+    
+    .mobile-menu-btn:hover {
+        background: rgba(192, 192, 192, 0.2);
+        border-color: #C0C0C0;
     }
     
     .nav-links {
         display: none;
     }
     
-    .mobile-nav-overlay {
-        display: block !important;
+    .mobile-nav-menu {
+        display: block;
     }
     
     .hero h2 {
@@ -3188,5 +3167,23 @@ a:visited {
     .game-button,
     .cta-button {
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    }
+}
+
+/* Extra small mobile devices - improve dropdown for narrow screens */
+@media (max-width: 480px) {
+    .mobile-nav-menu {
+        width: 250px;
+        max-width: 85vw;
+        right: 5px;
+    }
+    
+    .mobile-nav-links a {
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;
+    }
+    
+    nav {
+        padding: var(--space-sm) var(--space-md);
     }
 }
