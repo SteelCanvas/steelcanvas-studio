@@ -38,8 +38,8 @@
     <meta property="twitter:description" content="[Page specific description]">
     <meta property="twitter:image" content="https://steelcanvas.studio/logo.png">
     <meta property="twitter:image:alt" content="Steel Canvas Studio [Page Context]">
-    <meta name="twitter:creator" content="@steelcanvasstudio">
-    <meta name="twitter:site" content="@steelcanvasstudio">
+    <meta name="twitter:creator" content="@SteelCanvasDev">
+    <meta name="twitter:site" content="@SteelCanvasDev">
     
     <!-- Favicons -->
     <link rel="icon" type="image/png" href="favicon.png">

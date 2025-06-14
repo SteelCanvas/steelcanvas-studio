@@ -201,7 +201,7 @@ npx lighthouse http://localhost:8000 --output html --output-path ./lighthouse-re
 - **Twitch**: https://www.twitch.tv/steelcanvas
 - **Instagram**: https://www.instagram.com/steelcanvasstudio
 - **TikTok**: https://www.tiktok.com/@steelcanvas
-- **Twitter**: https://twitter.com/steelcanvasstudio
+- **Twitter**: https://x.com/SteelCanvasDev
 - **YouTube**: https://www.youtube.com/@steelcanvasstudio
 
 ## 🎮 Game-Specific Content
