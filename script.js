@@ -681,6 +681,48 @@ function initSimpleMobileNav() {
     }
 }
 
+// Clickable Cards Module
+const ClickableCards = {
+    /**
+     * Initialize clickable cards functionality
+     */
+    init: () => {
+        // Make news cards clickable
+        const newsCards = SteelCanvasUtils.DOM.selectAll('.game-card');
+        
+        newsCards.forEach(card => {
+            const link = card.querySelector('.game-button[href*="news-article"]');
+            if (link) {
+                card.classList.add('news-card-clickable');
+                card.style.cursor = 'pointer';
+                
+                SteelCanvasUtils.DOM.addEvent(card, 'click', (e) => {
+                    // Don't trigger if clicking on the actual button
+                    if (!e.target.closest('.game-button')) {
+                        window.location.href = link.href;
+                    }
+                });
+            }
+        });
+
+        // Make game cards on games page clickable
+        const gameCards = SteelCanvasUtils.DOM.selectAll('.game-card');
+        gameCards.forEach(card => {
+            const gameLink = card.querySelector('a[href*="pocket-legion"], a[href*="brainrot-battle"]');
+            if (gameLink) {
+                card.classList.add('news-card-clickable');
+                card.style.cursor = 'pointer';
+                
+                SteelCanvasUtils.DOM.addEvent(card, 'click', (e) => {
+                    if (!e.target.closest('a')) {
+                        window.location.href = gameLink.href;
+                    }
+                });
+            }
+        });
+    }
+};
+
 // Main Application Initialization
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -693,6 +735,7 @@ document.addEventListener('DOMContentLoaded', () => {
         HeaderEffects.init();
         PageAnimations.init();
         VisualFlowEffects.init();
+        ClickableCards.init();
 
         // Log successful initialization in development
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
