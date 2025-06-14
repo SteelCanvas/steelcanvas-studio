@@ -530,6 +530,74 @@ const VisualFlowEffects = {
     }
 };
 
+// Immediate Mobile Navigation Setup
+(function() {
+    console.log('🔧 IMMEDIATE: Setting up mobile navigation...');
+    
+    function setupMobileNav() {
+        console.log('🔍 SEARCHING: Looking for mobile nav elements...');
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileNavMenu');
+        
+        console.log('📱 FOUND:', { 
+            button: !!mobileBtn, 
+            menu: !!mobileMenu,
+            buttonElement: mobileBtn,
+            menuElement: mobileMenu 
+        });
+        
+        if (mobileBtn && mobileMenu) {
+            console.log('✅ SUCCESS: Both elements found, binding events...');
+            
+            // Remove any existing listeners
+            const newBtn = mobileBtn.cloneNode(true);
+            mobileBtn.parentNode.replaceChild(newBtn, mobileBtn);
+            
+            newBtn.addEventListener('click', function(e) {
+                console.log('🖱️ CLICK: Mobile button clicked!');
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const isActive = mobileMenu.classList.contains('active');
+                console.log('📊 STATUS: Menu is currently', isActive ? 'OPEN' : 'CLOSED');
+                
+                if (isActive) {
+                    mobileMenu.classList.remove('active');
+                    newBtn.setAttribute('aria-expanded', 'false');
+                    console.log('🔒 CLOSED: Menu hidden');
+                } else {
+                    mobileMenu.classList.add('active');
+                    newBtn.setAttribute('aria-expanded', 'true');
+                    console.log('🔓 OPENED: Menu visible');
+                }
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!newBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                    mobileMenu.classList.remove('active');
+                    newBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            console.log('🎉 COMPLETE: Mobile navigation ready!');
+            return true;
+        } else {
+            console.error('❌ ERROR: Mobile nav elements not found!');
+            return false;
+        }
+    }
+    
+    // Try immediately
+    if (document.readyState === 'loading') {
+        console.log('⏳ WAITING: DOM still loading, will retry...');
+        document.addEventListener('DOMContentLoaded', setupMobileNav);
+    } else {
+        console.log('🚀 READY: DOM loaded, setting up now...');
+        setupMobileNav();
+    }
+})();
+
 // Simple Mobile Navigation (Fallback)
 function initSimpleMobileNav() {
     console.log('Initializing simple mobile navigation...');
