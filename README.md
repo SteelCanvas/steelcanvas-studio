@@ -1,9 +1,9 @@
 # Steel Canvas Studio Website
 
-[\![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fsteelcanvas.studio)](https://steelcanvas.studio)
-[\![License](https://img.shields.io/badge/license-Private-red.svg)](LICENSE)
-[\![Built with](https://img.shields.io/badge/built%20with-HTML%2FCSS%2FJS-blue.svg)](#tech-stack)
-[\![Visual Flow](https://img.shields.io/badge/UI-Visual%20Flow%20System-green.svg)](#visual-enhancements)
+[![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fsteelcanvas.studio)](https://steelcanvas.studio)
+[![License](https://img.shields.io/badge/license-Private-red.svg)](LICENSE)
+[![Built with](https://img.shields.io/badge/built%20with-HTML%2FCSS%2FJS-blue.svg)](#tech-stack)
+[![Visual Flow](https://img.shields.io/badge/UI-Visual%20Flow%20System-green.svg)](#visual-enhancements)
 
 **Steel Canvas Studio** is an independent game development company crafting immersive gaming experiences. This repository contains the complete website featuring cutting-edge visual flow systems, seamless animations, and professional design patterns.
 

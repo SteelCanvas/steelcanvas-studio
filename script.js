@@ -212,14 +212,14 @@ const MobileNavigation = {
     init: () => {
         const elements = {
             menuBtn: SteelCanvasUtils.DOM.select('#mobileMenuBtn'),
-            closeBtn: SteelCanvasUtils.DOM.select('#mobileCloseBtn'),
-            overlay: SteelCanvasUtils.DOM.select('#mobileNavOverlay'),
             menu: SteelCanvasUtils.DOM.select('#mobileNavMenu'),
             links: SteelCanvasUtils.DOM.selectAll('.mobile-nav-links a')
         };
 
-        // Bind event listeners
-        MobileNavigation._bindEvents(elements);
+        // Only bind events if elements exist
+        if (elements.menuBtn && elements.menu) {
+            MobileNavigation._bindEvents(elements);
+        }
     },
 
     /**
