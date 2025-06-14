@@ -211,13 +211,20 @@ const MobileNavigation = {
      */
     init: () => {
         console.log('MobileNavigation.init() called'); // Debug log
+        
+        // Test basic DOM access first
+        console.log('Testing DOM access...');
+        const testBtn = document.querySelector('#mobileMenuBtn');
+        const testMenu = document.querySelector('#mobileNavMenu');
+        console.log('Direct querySelector results:', { testBtn, testMenu });
+        
         const elements = {
             menuBtn: SteelCanvasUtils.DOM.select('#mobileMenuBtn'),
             menu: SteelCanvasUtils.DOM.select('#mobileNavMenu'),
             links: SteelCanvasUtils.DOM.selectAll('.mobile-nav-links a')
         };
 
-        console.log('Found elements:', elements); // Debug log
+        console.log('Found elements via utils:', elements); // Debug log
 
         // Only bind events if elements exist
         if (elements.menuBtn && elements.menu) {
@@ -225,9 +232,23 @@ const MobileNavigation = {
             MobileNavigation._bindEvents(elements);
         } else {
             console.error('Mobile navigation elements not found!', {
-                menuBtn: elements.menuBtn,
-                menu: elements.menu
+                menuBtn: !!elements.menuBtn,
+                menu: !!elements.menu,
+                menuBtnExists: !!testBtn,
+                menuExists: !!testMenu
             }); // Debug log
+            
+            // Fallback: Try direct binding if elements exist
+            if (testBtn && testMenu) {
+                console.log('Attempting fallback direct binding...');
+                testBtn.addEventListener('click', (e) => {
+                    console.log('Direct button click!');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    testMenu.classList.toggle('active');
+                    console.log('Toggled active class, menu now has active:', testMenu.classList.contains('active'));
+                });
+            }
         }
     },
 
