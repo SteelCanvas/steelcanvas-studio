@@ -549,17 +549,17 @@ nav {
 
 /* Visual Flow System - Seamless Section Transitions */
 .about {
-    background: var(--gradient-flow-steel);
+    background: #2d2d2d;
     backdrop-filter: var(--glass-backdrop);
 }
 
 .games {
-    background: var(--gradient-flow-dark);
+    background: #1a1a1a;
     backdrop-filter: var(--glass-backdrop);
 }
 
 .contact {
-    background: var(--gradient-flow-accent);
+    background: #0a0a0a;
     backdrop-filter: var(--glass-backdrop);
 }
 
@@ -623,16 +623,17 @@ nav {
 }
 
 .game-card {
-    background: var(--glass-bg-dark);
+    background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
     backdrop-filter: var(--glass-backdrop);
     padding: 2.5rem;
     border-radius: var(--radius-xl);
     text-align: center;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    border: 2px solid #444;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    margin-bottom: 2rem;
 }
 
 /* Make news cards clickable */
@@ -648,8 +649,9 @@ nav {
 }
 
 .game-card:hover {
-    transform: translateY(-8px);
-    border-color: #C0C0C0;
+    transform: translateY(-5px);
+    border-color: #708090;
+    background: linear-gradient(135deg, #333333 0%, #252525 100%);
     box-shadow: 0 20px 40px rgba(112, 128, 144, 0.3);
 }
 
