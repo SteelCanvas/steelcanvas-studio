@@ -1007,19 +1007,32 @@ footer a:hover {
 @media (max-width: 768px) {
     .mobile-menu-btn {
         display: flex !important;
-        background: rgba(192, 192, 192, 0.1);
-        border: 1px solid #708090;
-        min-width: 44px;
-        min-height: 44px;
+        background: #ff0000 !important; /* Red background for debugging */
+        border: 3px solid #ffff00 !important; /* Yellow border for debugging */
+        color: #ffffff !important;
+        min-width: 50px !important;
+        min-height: 50px !important;
         align-items: center;
         justify-content: center;
         border-radius: 6px;
         transition: all 0.2s ease;
+        z-index: 9999 !important; /* Ensure it's on top */
+        position: relative !important;
+        font-size: 1.8rem !important;
+        font-weight: bold !important;
+        cursor: pointer !important;
+        pointer-events: auto !important; /* Force clickable */
     }
     
     .mobile-menu-btn:hover {
-        background: rgba(192, 192, 192, 0.2);
-        border-color: #C0C0C0;
+        background: #cc0000 !important;
+        border-color: #cccc00 !important;
+        transform: scale(1.1) !important;
+    }
+    
+    .mobile-menu-btn:active {
+        background: #990000 !important;
+        transform: scale(0.95) !important;
     }
     
     .nav-links {

@@ -535,37 +535,56 @@ const VisualFlowEffects = {
     console.log('🚀 MOBILE NAV: Starting setup...');
     
     function createMobileNav() {
+        console.log('🔧 Starting mobile nav setup...');
+        
         const btn = document.getElementById('mobileMenuBtn');
         const menu = document.getElementById('mobileNavMenu');
         
+        console.log('🔍 Looking for elements:', {
+            btn: !!btn,
+            menu: !!menu,
+            btnElement: btn,
+            menuElement: menu
+        });
+        
         if (!btn || !menu) {
-            console.error('❌ Mobile nav elements missing');
+            console.error('❌ Mobile nav elements missing!');
             return;
         }
         
-        console.log('✅ Elements found, setting up...');
+        console.log('✅ Elements found, setting up click handler...');
         
-        // Clear any existing handlers
-        btn.onclick = null;
+        // Remove ALL existing event listeners by cloning the button
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
         
-        // Simple toggle function
-        btn.onclick = function(e) {
+        // Force the button to be clickable with aggressive CSS
+        newBtn.style.cssText += 'pointer-events: auto !important; z-index: 99999 !important; position: relative !important; cursor: pointer !important;';
+        
+        // Simple toggle function with extensive logging
+        newBtn.addEventListener('click', function(e) {
+            console.log('🖱️ BUTTON CLICKED! Event:', e);
             e.preventDefault();
             e.stopPropagation();
             
             const isOpen = menu.classList.contains('active');
-            console.log('🔄 Toggling menu from', isOpen ? 'OPEN' : 'CLOSED');
+            console.log('📊 Current menu state:', isOpen ? 'OPEN' : 'CLOSED');
+            console.log('📋 Menu classes before toggle:', menu.className);
             
             if (isOpen) {
                 menu.classList.remove('active');
-                btn.setAttribute('aria-expanded', 'false');
+                newBtn.setAttribute('aria-expanded', 'false');
                 menu.setAttribute('aria-hidden', 'true');
+                console.log('🔒 CLOSING menu');
             } else {
                 menu.classList.add('active');
-                btn.setAttribute('aria-expanded', 'true');
+                newBtn.setAttribute('aria-expanded', 'true');
                 menu.setAttribute('aria-hidden', 'false');
+                console.log('🔓 OPENING menu');
             }
-        };
+            
+            console.log('📋 Menu classes after toggle:', menu.className);
+        });
         
         // Close on outside click
         document.onclick = function(e) {
