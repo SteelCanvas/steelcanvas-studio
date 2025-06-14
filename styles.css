@@ -933,6 +933,7 @@ footer a:hover {
 }
 
 .mobile-nav-menu {
+    display: none; /* Hidden by default on desktop */
     position: absolute;
     top: 100%;
     right: 0;
@@ -1026,7 +1027,13 @@ footer a:hover {
     }
     
     .mobile-nav-menu {
-        display: block;
+        display: block; /* Show on mobile */
+    }
+    
+    .mobile-nav-menu.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
     }
     
     .hero h2 {

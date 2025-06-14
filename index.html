@@ -166,6 +166,45 @@
             </div>
         </section>
 
+        <!-- Live Game Stats Section -->
+        <section class="games" style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%); position: relative;">
+            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 30% 40%, rgba(255, 107, 71, 0.1) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(192, 192, 192, 0.1) 0%, transparent 50%);"></div>
+            <div class="container" style="position: relative; z-index: 2;">
+                <h2 style="text-align: center; margin-bottom: 3rem; color: #C0C0C0;">Live Game Stats</h2>
+                <div class="games-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div class="game-card" style="background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%); border: 2px solid #4a9eff; text-align: center;">
+                        <h3 style="color: #4a9eff; margin-bottom: 1rem;">Total Players</h3>
+                        <p style="font-size: 2.5rem; font-weight: bold; color: #C0C0C0; margin: 0;" id="total-players">Loading...</p>
+                    </div>
+                    <div class="game-card" style="background: linear-gradient(135deg, #1e5f1e 0%, #2d872d 100%); border: 2px solid #4CAF50; text-align: center;">
+                        <h3 style="color: #4CAF50; margin-bottom: 1rem;">Players Today</h3>
+                        <p style="font-size: 2.5rem; font-weight: bold; color: #C0C0C0; margin: 0;" id="players-today">Loading...</p>
+                    </div>
+                    <div class="game-card" style="background: linear-gradient(135deg, #5f1e5f 0%, #872d87 100%); border: 2px solid #9C27B0; text-align: center;">
+                        <h3 style="color: #9C27B0; margin-bottom: 1rem;">Sessions Today</h3>
+                        <p style="font-size: 2.5rem; font-weight: bold; color: #C0C0C0; margin: 0;" id="sessions-today">Loading...</p>
+                    </div>
+                    <div class="game-card" style="background: linear-gradient(135deg, #5f3a1e 0%, #87582d 100%); border: 2px solid #FF9800; text-align: center;">
+                        <h3 style="color: #FF9800; margin-bottom: 1rem;">Average Score</h3>
+                        <p style="font-size: 2.5rem; font-weight: bold; color: #C0C0C0; margin: 0;" id="average-score">Loading...</p>
+                    </div>
+                    <div class="game-card" style="background: linear-gradient(135deg, #5f1e1e 0%, #872d2d 100%); border: 2px solid #ff6b47; text-align: center;">
+                        <h3 style="color: #ff6b47; margin-bottom: 1rem;">High Score</h3>
+                        <p style="font-size: 2.5rem; font-weight: bold; color: #C0C0C0; margin: 0;" id="high-score">Loading...</p>
+                    </div>
+                </div>
+                
+                <!-- Quick Leaderboard -->
+                <div style="margin-top: 3rem;">
+                    <h3 style="text-align: center; color: #C0C0C0; margin-bottom: 2rem;">Top Players</h3>
+                    <div id="leaderboard-list" style="max-width: 600px; margin: 0 auto;">
+                        <!-- Leaderboard entries will be populated by JavaScript -->
+                        <div style="text-align: center; color: #999;">Loading leaderboard...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="contact" class="contact">
             <div class="container">
                 <h2>Get in Touch</h2>
@@ -239,5 +278,6 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="api.js"></script>
 </body>
 </html>

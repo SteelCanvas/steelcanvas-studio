@@ -210,15 +210,24 @@ const MobileNavigation = {
      * Initialize mobile navigation functionality
      */
     init: () => {
+        console.log('MobileNavigation.init() called'); // Debug log
         const elements = {
             menuBtn: SteelCanvasUtils.DOM.select('#mobileMenuBtn'),
             menu: SteelCanvasUtils.DOM.select('#mobileNavMenu'),
             links: SteelCanvasUtils.DOM.selectAll('.mobile-nav-links a')
         };
 
+        console.log('Found elements:', elements); // Debug log
+
         // Only bind events if elements exist
         if (elements.menuBtn && elements.menu) {
+            console.log('Binding mobile navigation events...'); // Debug log
             MobileNavigation._bindEvents(elements);
+        } else {
+            console.error('Mobile navigation elements not found!', {
+                menuBtn: elements.menuBtn,
+                menu: elements.menu
+            }); // Debug log
         }
     },
 
@@ -227,8 +236,10 @@ const MobileNavigation = {
      * @param {Object} elements - Navigation elements
      */
     open: (elements) => {
+        console.log('Opening mobile menu...', elements.menu); // Debug log
         if (elements.menu) {
             elements.menu.classList.add('active');
+            console.log('Added active class to menu'); // Debug log
             
             // Update ARIA attributes for accessibility
             if (elements.menuBtn) elements.menuBtn.setAttribute('aria-expanded', 'true');
@@ -238,6 +249,8 @@ const MobileNavigation = {
             setTimeout(() => {
                 document.addEventListener('click', MobileNavigation._handleClickOutside);
             }, 10);
+        } else {
+            console.error('Mobile menu element not found!'); // Debug log
         }
     },
 
@@ -263,11 +276,15 @@ const MobileNavigation = {
      * @param {Object} elements - Navigation elements
      */
     toggle: (elements) => {
+        console.log('Toggle function called!'); // Debug log
         const isOpen = elements.menu && elements.menu.classList.contains('active');
+        console.log('Menu is currently open:', isOpen); // Debug log
         
         if (isOpen) {
+            console.log('Closing menu...'); // Debug log
             MobileNavigation.close(elements);
         } else {
+            console.log('Opening menu...'); // Debug log
             MobileNavigation.open(elements);
         }
     },
@@ -301,11 +318,15 @@ const MobileNavigation = {
     _bindEvents: (elements) => {
         // Menu toggle button
         if (elements.menuBtn) {
+            console.log('Binding click event to menu button'); // Debug log
             SteelCanvasUtils.DOM.addEvent(elements.menuBtn, 'click', (e) => {
+                console.log('Menu button clicked!'); // Debug log
                 SteelCanvasUtils.Events.preventDefault(e);
                 e.stopPropagation();
                 MobileNavigation.toggle(elements);
             });
+        } else {
+            console.error('Menu button not found for event binding!'); // Debug log
         }
 
         // Close menu when clicking navigation links
