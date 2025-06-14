@@ -1007,32 +1007,32 @@ footer a:hover {
 @media (max-width: 768px) {
     .mobile-menu-btn {
         display: flex !important;
-        background: #ff0000 !important; /* Red background for debugging */
-        border: 3px solid #ffff00 !important; /* Yellow border for debugging */
-        color: #ffffff !important;
-        min-width: 50px !important;
-        min-height: 50px !important;
+        background: rgba(192, 192, 192, 0.1);
+        border: 1px solid #708090;
+        color: #C0C0C0;
+        min-width: 44px;
+        min-height: 44px;
         align-items: center;
         justify-content: center;
         border-radius: 6px;
-        transition: all 0.2s ease;
-        z-index: 9999 !important; /* Ensure it's on top */
-        position: relative !important;
-        font-size: 1.8rem !important;
-        font-weight: bold !important;
-        cursor: pointer !important;
-        pointer-events: auto !important; /* Force clickable */
+        transition: all 0.3s ease;
+        z-index: 1001;
+        position: relative;
+        font-size: 1.5rem;
+        cursor: pointer;
+        pointer-events: auto;
     }
     
     .mobile-menu-btn:hover {
-        background: #cc0000 !important;
-        border-color: #cccc00 !important;
-        transform: scale(1.1) !important;
+        background: rgba(192, 192, 192, 0.2);
+        border-color: #C0C0C0;
+        transform: scale(1.05);
     }
     
     .mobile-menu-btn:active {
-        background: #990000 !important;
-        transform: scale(0.95) !important;
+        background: rgba(255, 107, 71, 0.3);
+        border-color: #ff6b47;
+        transform: scale(0.95);
     }
     
     .nav-links {
@@ -1044,12 +1044,10 @@ footer a:hover {
     }
     
     .mobile-nav-menu.active {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: translateY(0) !important;
-        display: block !important;
-        background: red !important; /* Temporary - make it obvious */
-        border: 3px solid yellow !important; /* Temporary - make it obvious */
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        display: block;
     }
     
     .hero h2 {

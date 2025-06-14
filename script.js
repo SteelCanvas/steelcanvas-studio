@@ -530,60 +530,36 @@ const VisualFlowEffects = {
     }
 };
 
-// Ultra-Simple Mobile Navigation (Primary System)
+// Mobile Navigation System
 (function() {
-    console.log('🚀 MOBILE NAV: Starting setup...');
-    
     function createMobileNav() {
-        console.log('🔧 Starting mobile nav setup...');
-        
         const btn = document.getElementById('mobileMenuBtn');
         const menu = document.getElementById('mobileNavMenu');
         
-        console.log('🔍 Looking for elements:', {
-            btn: !!btn,
-            menu: !!menu,
-            btnElement: btn,
-            menuElement: menu
-        });
-        
         if (!btn || !menu) {
-            console.error('❌ Mobile nav elements missing!');
             return;
         }
         
-        console.log('✅ Elements found, setting up click handler...');
-        
-        // Remove ALL existing event listeners by cloning the button
+        // Remove any existing event listeners by cloning the button
         const newBtn = btn.cloneNode(true);
         btn.parentNode.replaceChild(newBtn, btn);
         
-        // Force the button to be clickable with aggressive CSS
-        newBtn.style.cssText += 'pointer-events: auto !important; z-index: 99999 !important; position: relative !important; cursor: pointer !important;';
-        
-        // Simple toggle function with extensive logging
+        // Simple toggle function
         newBtn.addEventListener('click', function(e) {
-            console.log('🖱️ BUTTON CLICKED! Event:', e);
             e.preventDefault();
             e.stopPropagation();
             
             const isOpen = menu.classList.contains('active');
-            console.log('📊 Current menu state:', isOpen ? 'OPEN' : 'CLOSED');
-            console.log('📋 Menu classes before toggle:', menu.className);
             
             if (isOpen) {
                 menu.classList.remove('active');
                 newBtn.setAttribute('aria-expanded', 'false');
                 menu.setAttribute('aria-hidden', 'true');
-                console.log('🔒 CLOSING menu');
             } else {
                 menu.classList.add('active');
                 newBtn.setAttribute('aria-expanded', 'true');
                 menu.setAttribute('aria-hidden', 'false');
-                console.log('🔓 OPENING menu');
             }
-            
-            console.log('📋 Menu classes after toggle:', menu.className);
         });
         
         // Close on outside click
@@ -604,50 +580,8 @@ const VisualFlowEffects = {
                 menu.setAttribute('aria-hidden', 'true');
             };
         });
-        
-        console.log('🎯 Mobile navigation ready!');
     }
     
-    // Test function for debugging
-    window.testMobileMenu = function() {
-        const menu = document.getElementById('mobileNavMenu');
-        if (menu) {
-            menu.classList.add('active');
-            console.log('🧪 TEST: Menu forced open');
-        }
-    };
-    
-    // Create visible test button for mobile debugging
-    function createTestButton() {
-        const testBtn = document.createElement('button');
-        testBtn.textContent = 'TEST MENU';
-        testBtn.style.cssText = `
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 9999;
-            background: #ff0000;
-            color: white;
-            border: 3px solid yellow;
-            padding: 10px;
-            font-weight: bold;
-            border-radius: 5px;
-            cursor: pointer;
-        `;
-        testBtn.onclick = function() {
-            const menu = document.getElementById('mobileNavMenu');
-            if (menu) {
-                menu.classList.toggle('active');
-                testBtn.textContent = menu.classList.contains('active') ? 'CLOSE MENU' : 'TEST MENU';
-            }
-        };
-        document.body.appendChild(testBtn);
-    }
-    
-    // Only show test button on mobile
-    if (window.innerWidth <= 768) {
-        createTestButton();
-    }
     
     // Initialize
     if (document.readyState === 'loading') {
