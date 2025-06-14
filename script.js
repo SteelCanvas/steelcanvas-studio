@@ -359,6 +359,111 @@ const PageAnimations = {
     }
 };
 
+// Visual Flow Effects Module
+const VisualFlowEffects = {
+    /**
+     * Initialize visual flow system
+     */
+    init: () => {
+        VisualFlowEffects.setupScrollAnimations();
+        VisualFlowEffects.setupStaggeredAnimations();
+        VisualFlowEffects.setupParallaxElements();
+    },
+
+    /**
+     * Setup enhanced scroll-triggered animations
+     */
+    setupScrollAnimations: () => {
+        // Skip animations if user prefers reduced motion or on mobile
+        if (VisualFlowEffects.respectsReducedMotion() || window.innerWidth <= 768) return;
+        
+        const elements = SteelCanvasUtils.DOM.selectAll('.game-card, .contact-card, .news-card');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('animate-on-scroll', 'animate');
+                    }, index * 100); // Staggered delay
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        elements.forEach(element => {
+            element.classList.add('animate-on-scroll');
+            observer.observe(element);
+        });
+    },
+
+    /**
+     * Setup staggered card animations
+     */
+    setupStaggeredAnimations: () => {
+        const gameGrids = SteelCanvasUtils.DOM.selectAll('.games-grid');
+        
+        gameGrids.forEach(grid => {
+            const cards = grid.querySelectorAll('.game-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        cards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                                card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                            }, index * 150);
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            // Initially hide cards
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+            });
+
+            observer.observe(grid);
+        });
+    },
+
+    /**
+     * Setup floating parallax elements
+     */
+    setupParallaxElements: () => {
+        // Skip parallax on mobile devices for performance
+        if (window.innerWidth <= 768) return;
+        
+        const floatingElements = SteelCanvasUtils.DOM.selectAll('.floating-circle');
+        
+        if (floatingElements.length === 0) return;
+
+        const handleScroll = SteelCanvasUtils.Events.debounce(() => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+
+            floatingElements.forEach((element, index) => {
+                const speed = (index + 1) * 0.3;
+                element.style.transform = `translateY(${rate * speed}px)`;
+            });
+        }, 10);
+
+        SteelCanvasUtils.DOM.addEvent(window, 'scroll', handleScroll);
+    },
+
+    /**
+     * Check if device prefers reduced motion
+     */
+    respectsReducedMotion: () => {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+};
+
 // Main Application Initialization
 document.addEventListener('DOMContentLoaded', () => {
     try {
@@ -367,6 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
         SmoothScrolling.init();
         HeaderEffects.init();
         PageAnimations.init();
+        VisualFlowEffects.init();
 
         // Log successful initialization in development
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {

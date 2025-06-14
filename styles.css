@@ -41,6 +41,24 @@ html {
     --gradient-secondary: linear-gradient(135deg, #2F4F4F 0%, #1a1a1a 100%);
     --gradient-hero: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2F4F4F 100%);
     
+    /* Visual Flow System - Seamless Gradients */
+    --gradient-flow-dark: linear-gradient(180deg, #000000 0%, #0a0a0a 25%, #1a1a1a 50%, #2d2d2d 75%, #1a1a1a 100%);
+    --gradient-flow-light: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 25%, #3a3a3a 50%, #2d2d2d 75%, #1a1a1a 100%);
+    --gradient-flow-accent: linear-gradient(180deg, #1a1a1a 0%, rgba(255, 107, 71, 0.1) 50%, #1a1a1a 100%);
+    --gradient-flow-steel: linear-gradient(180deg, #1a1a1a 0%, rgba(192, 192, 192, 0.1) 50%, #1a1a1a 100%);
+    
+    /* Glassmorphism Effects */
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-bg-dark: rgba(0, 0, 0, 0.3);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    --glass-backdrop: blur(10px);
+    
+    /* Animation Properties */
+    --animation-duration: 0.6s;
+    --animation-delay: 0.1s;
+    --animation-curve: cubic-bezier(0.4, 0, 0.2, 1);
+    
     /* Spacing Scale */
     --space-xs: 0.25rem;     /* 4px */
     --space-sm: 0.5rem;      /* 8px */
@@ -92,6 +110,8 @@ html {
     --transition-fast: 0.15s ease;
     --transition-base: 0.3s ease;
     --transition-slow: 0.6s ease;
+    --transition-bounce: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-smooth: 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     
     /* Z-Index Scale */
     --z-dropdown: 1000;
@@ -132,10 +152,12 @@ body {
     font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
     line-height: 1.6;
     color: var(--text-primary);
-    background-color: var(--background-dark);
+    background: var(--gradient-flow-dark);
+    background-attachment: fixed;
     overflow-x: hidden;
     font-size: var(--font-base);
     font-weight: var(--font-normal);
+    min-height: 100vh;
 }
 
 /* ==========================================================================
@@ -480,34 +502,97 @@ nav {
     color: #ffffff;
     padding: 16px 32px;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: var(--radius-lg);
     font-weight: 600;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
+    transition: all var(--transition-bounce);
     border: 2px solid transparent;
     box-shadow: 0 0 20px rgba(112, 128, 144, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.4s ease;
+}
+
+.cta-button:hover::before {
+    width: 120px;
+    height: 120px;
 }
 
 .cta-button:hover {
     background: linear-gradient(45deg, #778899, #B0C4DE);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(112, 128, 144, 0.5);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 30px rgba(112, 128, 144, 0.6);
+}
+
+.cta-button:active {
+    transform: translateY(-1px) scale(0.98);
 }
 
 .about, .games, .contact {
     padding: 100px 0;
+    position: relative;
+    overflow: hidden;
 }
 
+/* Visual Flow System - Seamless Section Transitions */
 .about {
-    background: #1a1a1a;
+    background: var(--gradient-flow-steel);
+    backdrop-filter: var(--glass-backdrop);
 }
 
 .games {
-    background: #000000;
+    background: var(--gradient-flow-dark);
+    backdrop-filter: var(--glass-backdrop);
 }
 
 .contact {
-    background: #1a1a1a;
+    background: var(--gradient-flow-accent);
+    backdrop-filter: var(--glass-backdrop);
+}
+
+/* Add flowing background elements */
+.about::before,
+.games::before,
+.contact::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, rgba(192, 192, 192, 0.05) 0%, transparent 70%);
+    animation: breathe 6s ease-in-out infinite;
+    z-index: 1;
+}
+
+.games::before {
+    background: radial-gradient(ellipse at center, rgba(255, 107, 71, 0.03) 0%, transparent 70%);
+    animation-delay: 2s;
+}
+
+.contact::before {
+    background: radial-gradient(ellipse at center, rgba(192, 192, 192, 0.08) 0%, transparent 70%);
+    animation-delay: 4s;
+}
+
+/* Ensure content is above background animations */
+.about .container,
+.games .container,
+.contact .container {
+    position: relative;
+    z-index: 2;
 }
 
 .about h2, .games h2, .contact h2 {
@@ -537,11 +622,13 @@ nav {
 }
 
 .game-card {
-    background: linear-gradient(135deg, #2F4F4F 0%, #1a1a1a 100%);
+    background: var(--glass-bg-dark);
+    backdrop-filter: var(--glass-backdrop);
     padding: 2.5rem;
-    border-radius: 12px;
+    border-radius: var(--radius-xl);
     text-align: center;
-    border: 1px solid #708090;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -604,17 +691,41 @@ nav {
     color: #ffffff;
     padding: 12px 24px;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: var(--radius-lg);
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all var(--transition-bounce);
     margin: 0 8px;
     box-shadow: 0 0 15px rgba(112, 128, 144, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.4s ease;
 }
 
 .game-button:hover {
     background: linear-gradient(45deg, #778899, #B0C4DE);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(112, 128, 144, 0.5);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(112, 128, 144, 0.6);
+}
+
+.game-button:hover::before {
+    width: 100px;
+    height: 100px;
+}
+
+.game-button:active {
+    transform: translateY(-1px) scale(0.98);
 }
 
 .game-button.secondary {
@@ -1011,20 +1122,23 @@ footer a:hover {
 }
 
 .contact-card {
-    background: linear-gradient(135deg, #2F4F4F 0%, #1a1a1a 100%);
+    background: var(--glass-bg-dark);
+    backdrop-filter: var(--glass-backdrop);
     padding: 3rem;
-    border-radius: 12px;
+    border-radius: var(--radius-xl);
     text-align: center;
-    border: 1px solid #708090;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
     max-width: 500px;
     width: 100%;
-    transition: all 0.3s ease;
+    transition: all var(--transition-smooth);
 }
 
 .contact-card:hover {
-    transform: translateY(-4px);
-    border-color: #C0C0C0;
-    box-shadow: 0 15px 35px rgba(112, 128, 144, 0.3);
+    background: var(--glass-bg);
+    transform: translateY(-8px);
+    border-color: var(--primary-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(192, 192, 192, 0.2);
 }
 
 .contact-card h3 {
@@ -2807,5 +2921,272 @@ a:visited {
     .platform-icon-header svg {
         width: 40px;
         height: 40px;
+    }
+}
+
+/* ==========================================================================
+   VISUAL FLOW SYSTEM - ANIMATIONS & EFFECTS
+   ========================================================================== */
+
+/* Breathing animation for background elements */
+@keyframes breathe {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.1);
+    }
+}
+
+/* Fade-in animations for scroll-triggered effects */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Floating animation for geometric elements */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Pulse animation for accent elements */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+/* Enhanced glassmorphism hover effects */
+.game-card:hover {
+    background: var(--glass-bg);
+    border-color: var(--primary-color);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(192, 192, 192, 0.2);
+    transition: all var(--transition-smooth);
+}
+
+/* SVG Wave Dividers */
+.section-divider {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.section-divider svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 60px;
+}
+
+.section-divider .shape-fill {
+    fill: var(--background-dark);
+}
+
+/* Specific divider colors for seamless flow */
+.games .section-divider .shape-fill {
+    fill: var(--background-light);
+}
+
+.contact .section-divider .shape-fill {
+    fill: var(--background-dark);
+}
+
+/* Floating geometric elements */
+.floating-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.floating-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(192, 192, 192, 0.1), transparent);
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-circle:nth-child(1) {
+    width: 100px;
+    height: 100px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-circle:nth-child(2) {
+    width: 150px;
+    height: 150px;
+    top: 60%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.floating-circle:nth-child(3) {
+    width: 80px;
+    height: 80px;
+    bottom: 30%;
+    left: 70%;
+    animation-delay: 4s;
+}
+
+/* Scroll-triggered animation classes */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-on-scroll.animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.animate-on-scroll.delay-1 {
+    transition-delay: 0.1s;
+}
+
+.animate-on-scroll.delay-2 {
+    transition-delay: 0.2s;
+}
+
+.animate-on-scroll.delay-3 {
+    transition-delay: 0.3s;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    /* Reduce motion for better performance */
+    * {
+        animation-duration: 0.3s !important;
+        transition-duration: 0.2s !important;
+    }
+    
+    /* Disable resource-intensive effects */
+    .floating-circle,
+    .floating-elements {
+        display: none; /* Hide floating elements on mobile for performance */
+    }
+    
+    body {
+        background-attachment: scroll; /* Fix for mobile iOS */
+        background: var(--background-dark); /* Fallback solid background */
+    }
+    
+    /* Optimize section backgrounds */
+    .about::before,
+    .games::before,
+    .contact::before {
+        display: none; /* Disable breathing animations on mobile */
+    }
+    
+    /* Reduce section divider complexity */
+    .section-divider svg {
+        height: 30px;
+    }
+    
+    /* Simplified hover effects for touch devices */
+    .game-card:hover,
+    .contact-card:hover {
+        transform: translateY(-2px); /* Reduced hover effect */
+        transition: transform 0.2s ease;
+    }
+    
+    /* Optimize button interactions for touch */
+    .game-button:hover,
+    .cta-button:hover {
+        transform: translateY(-1px) scale(1.01); /* Gentler hover effects */
+    }
+    
+    .game-button::before,
+    .cta-button::before {
+        display: none; /* Remove ripple effects on mobile */
+    }
+    
+    /* Reduce backdrop-filter for better performance */
+    .game-card,
+    .contact-card {
+        backdrop-filter: none;
+        background: rgba(47, 79, 79, 0.8); /* Solid fallback */
+    }
+    
+    /* Optimize scroll animations */
+    .animate-on-scroll {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Additional performance optimizations for older mobile devices */
+@media (max-width: 480px) {
+    /* Further reduce animations */
+    .hero::before,
+    .hero::after {
+        display: none;
+    }
+    
+    /* Simplified gradients */
+    .about,
+    .games,
+    .contact {
+        background: var(--background-light) !important;
+    }
+    
+    /* Remove complex shadows */
+    .game-card,
+    .contact-card,
+    .game-button,
+    .cta-button {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
     }
 }
