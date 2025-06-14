@@ -3024,17 +3024,50 @@ a:visited {
     overflow: hidden;
     line-height: 0;
     transform: rotate(180deg);
+    z-index: 10;
 }
 
 .section-divider svg {
     position: relative;
     display: block;
     width: calc(100% + 1.3px);
-    height: 60px;
+    height: 80px;
+    transition: height 0.3s ease;
 }
 
 .section-divider .shape-fill {
     fill: var(--background-dark);
+}
+
+/* Enhanced Section Transitions */
+section {
+    position: relative;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Seamless gradient overlays between sections */
+section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+section::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.1) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
 /* Specific divider colors for seamless flow */
@@ -3044,6 +3077,78 @@ a:visited {
 
 .contact .section-divider .shape-fill {
     fill: var(--background-dark);
+}
+
+.hero .section-divider .shape-fill {
+    fill: var(--background-light);
+}
+
+.about .section-divider .shape-fill {
+    fill: var(--background-dark);
+}
+
+/* Article Page Styling */
+.article-page {
+    margin-top: 80px;
+}
+
+.article-hero {
+    padding: 6rem 0 4rem 0;
+    position: relative;
+}
+
+.article-content {
+    color: #e8e8e8;
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.article-content h2 {
+    color: #C0C0C0;
+    font-size: 1.8rem;
+    margin: 3rem 0 1.5rem 0;
+    font-weight: 600;
+}
+
+.article-content h3 {
+    color: #ff6b47;
+    font-size: 1.4rem;
+    margin: 2.5rem 0 1rem 0;
+    font-weight: 600;
+}
+
+.article-content p {
+    margin-bottom: 1.5rem;
+}
+
+.article-content ul, .article-content ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+}
+
+.article-content li {
+    margin-bottom: 0.8rem;
+    color: #e8e8e8;
+}
+
+.article-content li strong {
+    color: #C0C0C0;
+}
+
+.article-intro {
+    font-size: 1.3rem !important;
+    color: #C0C0C0 !important;
+    font-weight: 500;
+    line-height: 1.6;
+    margin-bottom: 3rem !important;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.1) 0%, rgba(255, 107, 71, 0.1) 100%);
+    border-left: 4px solid #ff6b47;
+    border-radius: 0 8px 8px 0;
+}
+
+.article-section {
+    margin-bottom: 4rem;
 }
 
 /* Floating geometric elements */
