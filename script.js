@@ -428,36 +428,6 @@ const PageAnimations = {
             threshold: 0.2,
             rootMargin: '0px 0px -20px 0px'
         });
-
-        // Smooth section transitions
-        PageAnimations.initSmoothSectionTransitions();
-    },
-
-    /**
-     * Initialize smooth section transitions
-     */
-    initSmoothSectionTransitions: () => {
-        const sections = SteelCanvasUtils.DOM.selectAll('section');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.transform = 'translateY(0)';
-                    entry.target.style.opacity = '1';
-                } else {
-                    entry.target.style.transform = 'translateY(10px)';
-                    entry.target.style.opacity = '0.95';
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        });
-
-        sections.forEach(section => {
-            section.style.transition = 'transform 0.6s ease, opacity 0.6s ease';
-            observer.observe(section);
-        });
     }
 };
 
