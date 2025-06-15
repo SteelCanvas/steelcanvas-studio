@@ -623,14 +623,13 @@ nav {
 }
 
 .game-card {
-    background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
-    backdrop-filter: var(--glass-backdrop);
+    background: #2a2a2a;
     padding: 2.5rem;
     border-radius: var(--radius-xl);
     text-align: center;
     border: 2px solid #444;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     overflow: hidden;
     margin-bottom: 2rem;
@@ -651,7 +650,6 @@ nav {
 .game-card:hover {
     transform: translateY(-5px);
     border-color: #708090;
-    background: linear-gradient(135deg, #333333 0%, #252525 100%);
     box-shadow: 0 20px 40px rgba(112, 128, 144, 0.3);
 }
 
@@ -3136,24 +3134,24 @@ section {
 
 /* Clickable Related Article Cards */
 .related-article-card {
-    background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
-    border: 1px solid #444;
+    background: #2a2a2a;
+    border: 2px solid #444;
     border-radius: 10px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     text-decoration: none;
     color: inherit;
     display: block;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .related-article-card:hover {
     border-color: #ff6b47;
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(255, 107, 71, 0.2);
-    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+    box-shadow: 0 8px 24px rgba(255, 107, 71, 0.2);
 }
 
 .related-article-card h4 {
@@ -3174,7 +3172,7 @@ section {
 }
 
 .related-article-card:hover p {
-    color: #C0C0C0;
+    color: #e8e8e8;
 }
 
 .related-article-card .read-time {
