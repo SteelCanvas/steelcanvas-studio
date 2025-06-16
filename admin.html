@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Steel Canvas Studio</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="favicon.png" type="image/png">
+    
+    <!-- Chart.js for analytics visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- SheetJS for Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --background-color: #ecf0f1;
+            --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --border-color: #bdc3c7;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* Login Form Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .login-form {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-form h1 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .login-btn {
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        .login-btn:hover {
+            background: #2980b9;
+        }
+
+        .error-message {
+            color: var(--accent-color);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            min-height: 100vh;
+            background-color: var(--background-color);
+        }
+
+        .dashboard-header {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .dashboard-title {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .export-btn, .logout-btn, .refresh-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .export-btn {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .export-btn:hover {
+            background: #229954;
+        }
+
+        .refresh-btn {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .refresh-btn:hover {
+            background: #e67e22;
+        }
+
+        .logout-btn {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .dashboard-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .metric-change {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .metric-change.positive {
+            color: var(--success-color);
+        }
+
+        .metric-change.negative {
+            color: var(--accent-color);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .data-tables {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+
+        .table-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            background: var(--background-color);
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table tr:hover {
+            background: var(--background-color);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .status-online {
+            background: var(--success-color);
+        }
+
+        .status-warning {
+            background: var(--warning-color);
+        }
+
+        .status-error {
+            background: var(--accent-color);
+        }
+
+        /* Tab Navigation Styles */
+        .tab-nav {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 2rem;
+            display: flex;
+            gap: 0;
+        }
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            background: var(--background-color);
+            color: var(--secondary-color);
+        }
+
+        .tab-button.active {
+            color: var(--secondary-color);
+            border-bottom-color: var(--secondary-color);
+            background: var(--background-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-section-title {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .dashboard-actions {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .tab-nav {
+                padding: 0 1rem;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .tab-button {
+                padding: 1rem 1.5rem;
+                min-width: max-content;
+            }
+
+            .charts-grid,
+            .data-tables {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div id="loginContainer" class="login-container">
+        <form class="login-form" id="loginForm">
+            <h1>Admin Dashboard</h1>
+            <p>Steel Canvas Studio Analytics</p>
+            
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="login-btn">Login</button>
+            <div id="errorMessage" class="error-message"></div>
+        </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">Steel Canvas Studio - Admin Dashboard</h1>
+            <div class="dashboard-actions">
+                <button class="refresh-btn" onclick="refreshData()">🔄 Refresh</button>
+                <button class="export-btn" onclick="exportToPDF()">📄 Export PDF</button>
+                <button class="export-btn" onclick="exportToExcel()">📊 Export Excel</button>
+                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="tab-button active" onclick="switchTab(event, 'website')">🌐 Website Analytics</button>
+            <button class="tab-button" onclick="switchTab(event, 'game')">🎮 Game Analytics</button>
+            <button class="tab-button" onclick="switchTab(event, 'finance')">💰 Finance Analytics</button>
+        </nav>
+
+        <main class="dashboard-content">
+            <!-- Website Analytics Tab -->
+            <div id="website" class="tab-content active">
+                <h2 class="tab-section-title">Website Analytics</h2>
+                
+                <!-- Website Metrics -->
+                <section class="metrics-grid" id="websiteMetricsGrid">
+                    <!-- Metrics will be populated by JavaScript -->
+                </section>
+
+                <!-- Website Charts -->
+                <section class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Website Traffic</h3>
+                        <div class="chart-container">
+                            <canvas id="websiteTrafficChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Page Views</h3>
+                        <div class="chart-container">
+                            <canvas id="pageViewsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Traffic Sources</h3>
+                        <div class="chart-container">
+                            <canvas id="trafficSourcesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Device Usage</h3>
+                        <div class="chart-container">
+                            <canvas id="deviceUsageChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Website Tables -->
+                <section class="data-tables">
+                    <div class="table-card">
+                        <h3 class="table-title">Top Pages</h3>
+                        <table class="data-table" id="topPagesTable">
+                            <thead>
+                                <tr>
+                                    <th>Page</th>
+                                    <th>Views</th>
+                                    <th>Unique Visitors</th>
+                                    <th>Bounce Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-card">
+                        <h3 class="table-title">SEO Performance</h3>
+                        <table class="data-table" id="seoTable">
+                            <thead>
+                                <tr>
+                                    <th>Keyword</th>
+                                    <th>Position</th>
+                                    <th>Clicks</th>
+                                    <th>Impressions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Game Analytics Tab -->
+            <div id="game" class="tab-content">
+                <h2 class="tab-section-title">Game Analytics</h2>
+                
+                <!-- Game Metrics -->
+                <section class="metrics-grid" id="gameMetricsGrid">
+                    <!-- Metrics will be populated by JavaScript -->
+                </section>
+
+                <!-- Game Charts -->
+                <section class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Daily Active Players</h3>
+                        <div class="chart-container">
+                            <canvas id="dailyPlayersChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Session Duration Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="sessionDurationChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Score Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="scoreDistributionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Platform Usage</h3>
+                        <div class="chart-container">
+                            <canvas id="platformUsageChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Player Retention Cohort</h3>
+                        <div class="chart-container">
+                            <canvas id="retentionCohortChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Gameplay Patterns</h3>
+                        <div class="chart-container">
+                            <canvas id="gameplayPatternsChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Game Tables -->
+                <section class="data-tables">
+                    <div class="table-card">
+                        <h3 class="table-title">Top Players</h3>
+                        <table class="data-table" id="topPlayersTable">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Username</th>
+                                    <th>High Score</th>
+                                    <th>Total Games</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-card">
+                        <h3 class="table-title">Game Performance</h3>
+                        <table class="data-table" id="gamePerformanceTable">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                    <th>Status</th>
+                                    <th>Last Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Finance Analytics Tab -->
+            <div id="finance" class="tab-content">
+                <h2 class="tab-section-title">Finance Analytics</h2>
+                
+                <!-- Finance Metrics -->
+                <section class="metrics-grid" id="financeMetricsGrid">
+                    <!-- Metrics will be populated by JavaScript -->
+                </section>
+
+                <!-- Finance Charts -->
+                <section class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Revenue Trend</h3>
+                        <div class="chart-container">
+                            <canvas id="revenueTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Patreon Growth</h3>
+                        <div class="chart-container">
+                            <canvas id="patreonGrowthChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Revenue Sources</h3>
+                        <div class="chart-container">
+                            <canvas id="revenueSourcesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Monthly Recurring Revenue</h3>
+                        <div class="chart-container">
+                            <canvas id="mrrChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Expense Breakdown</h3>
+                        <div class="chart-container">
+                            <canvas id="expenseBreakdownChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Profit Margin Trend</h3>
+                        <div class="chart-container">
+                            <canvas id="profitMarginChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Finance Tables -->
+                <section class="data-tables">
+                    <div class="table-card">
+                        <h3 class="table-title">Top Patreon Supporters</h3>
+                        <table class="data-table" id="topPatreonTable">
+                            <thead>
+                                <tr>
+                                    <th>Tier</th>
+                                    <th>Supporters</th>
+                                    <th>Monthly Revenue</th>
+                                    <th>% of Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-card">
+                        <h3 class="table-title">Financial Health</h3>
+                        <table class="data-table" id="financialHealthTable">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Current</th>
+                                    <th>Target</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>
