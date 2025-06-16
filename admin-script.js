@@ -174,16 +174,23 @@ class AdminDashboard {
     generateDashboardData(realData = {}) {
         const now = new Date();
         
+        // Fallback to local visitor tracking when Cloudflare is not configured
+        const localData = this.getLocalVisitorData();
+        const isCloudflareConfigured = realData.website?.configured === true;
+        
+        console.log('DEBUG: Local visitor data:', localData);
+        console.log('DEBUG: Cloudflare configured:', isCloudflareConfigured);
+        
         return {
             website: {
-                // Use real website analytics data where available
-                totalVisitors: realData.website?.totalVisitors || 0,
-                pageViews: realData.website?.pageViews || 0,
+                // Use Cloudflare data if configured, otherwise use local tracking
+                totalVisitors: isCloudflareConfigured ? (realData.website?.totalVisitors || 0) : localData.visitors,
+                pageViews: isCloudflareConfigured ? (realData.website?.pageViews || 0) : localData.pageViews,
                 bounceRate: realData.website?.bounceRate || 0,
                 avgSessionDuration: realData.website?.avgSessionDuration || 0,
                 bandwidth: realData.website?.bandwidth || 0,
                 requests: realData.website?.requests || 0,
-                uniqueVisitors: realData.website?.uniqueVisitors || 0,
+                uniqueVisitors: isCloudflareConfigured ? (realData.website?.uniqueVisitors || 0) : localData.visitors,
                 configured: (function() {
                     const result = realData.website?.configured === true;
                     console.log('DEBUG: realData.website?.configured =', realData.website?.configured);
@@ -253,14 +260,14 @@ class AdminDashboard {
             {
                 label: 'Total Visitors',
                 value: websiteData.totalVisitors.toLocaleString(),
-                change: websiteData.configured ? 'Live Data' : 'No Data',
-                positive: websiteData.configured
+                change: websiteData.configured ? 'Cloudflare Data' : 'Local Tracking',
+                positive: true // Always positive since we have some form of data
             },
             {
                 label: 'Page Views',
                 value: websiteData.pageViews.toLocaleString(),
-                change: websiteData.configured ? 'Live Data' : 'No Data',
-                positive: websiteData.configured
+                change: websiteData.configured ? 'Cloudflare Data' : 'Local Tracking',
+                positive: true // Always positive since we have some form of data
             },
             {
                 label: 'Bandwidth',
