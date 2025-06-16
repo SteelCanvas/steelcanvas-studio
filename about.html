@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>About Steel Canvas Studio - Independent Game Development Company</title>
     <meta name="description" content="Learn about Steel Canvas Studio, an independent game development company creating innovative gaming experiences. Discover our story, mission, and vision.">
     <meta name="keywords" content="about steel canvas studio, indie game developer, game development company, independent games, gaming studio">
@@ -98,7 +101,7 @@
                 <div class="hero-content">
                     <h1>About Steel Canvas Studio</h1>
                     <p class="hero-subtitle">Where creativity meets technology to forge unforgettable gaming adventures</p>
-                    <a href="#mission" class="cta-button" aria-label="Learn more about our mission and values" onclick="document.getElementById('mission').scrollIntoView({behavior: 'smooth', block: 'start'}); return false;">About Us</a>
+                    <button class="cta-button" aria-label="Learn more about our mission and values" onclick="scrollToMission()" type="button">About Us</button>
                 </div>
             </div>
         </section>
@@ -256,5 +259,20 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        function scrollToMission() {
+            console.log('About Us button clicked!');
+            const missionSection = document.getElementById('mission');
+            if (missionSection) {
+                missionSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+                console.log('Scrolling to mission section');
+            } else {
+                console.error('Mission section not found!');
+            }
+        }
+    </script>
 </body>
 </html>
