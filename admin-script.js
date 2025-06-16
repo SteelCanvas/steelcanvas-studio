@@ -69,10 +69,12 @@ class AdminDashboard {
             console.log('Loading dashboard data...');
             
             // Try to fetch real data from the backend
-            const [publicStatsResponse, leaderboardResponse, activityResponse] = await Promise.all([
+            const [publicStatsResponse, leaderboardResponse, activityResponse, websiteAnalytics, patreonData] = await Promise.all([
                 fetch(`${this.apiBaseUrl}/public/stats/overview`).catch(() => null),
                 fetch(`${this.apiBaseUrl}/public/leaderboard/top10`).catch(() => null),
-                fetch(`${this.apiBaseUrl}/public/activity/recent`).catch(() => null)
+                fetch(`${this.apiBaseUrl}/public/activity/recent`).catch(() => null),
+                this.fetchWebsiteAnalytics().catch(() => null),
+                this.fetchPatreonData().catch(() => null)
             ]);
             
             let realData = {};
@@ -92,15 +94,127 @@ class AdminDashboard {
                 console.log('Real activity data loaded:', realData.activity);
             }
             
-            // Use real data where available, generate realistic fallbacks
+            if (websiteAnalytics) {
+                realData.website = websiteAnalytics;
+                console.log('Real website analytics loaded:', realData.website);
+            }
+            
+            if (patreonData) {
+                realData.patreon = patreonData;
+                console.log('Real Patreon data loaded:', realData.patreon);
+            }
+            
+            // Use real data where available
             this.dashboardData = this.generateDashboardData(realData);
             
         } catch (error) {
-            console.log('Backend not available, using realistic sample data:', error.message);
+            console.log('Error loading data, using fallback values:', error.message);
             this.dashboardData = this.generateDashboardData({});
         }
 
         this.renderAllTabs();
+    }
+
+    async fetchWebsiteAnalytics() {
+        try {
+            // Try to get website data from backend Cloudflare integration
+            const cloudflareResponse = await fetch(`${this.apiBaseUrl}/public/cloudflare/analytics?days=30`);
+            
+            // Simple visitor tracking from browser storage as fallback
+            const localVisitorData = this.getLocalVisitorData();
+            
+            let cloudflareData = null;
+            if (cloudflareResponse.ok) {
+                cloudflareData = await cloudflareResponse.json();
+                console.log('Cloudflare analytics loaded:', cloudflareData);
+            }
+            
+            return {
+                totalVisitors: cloudflareData?.visitors || localVisitorData.visitors || 0,
+                pageViews: cloudflareData?.pageViews || localVisitorData.pageViews || 0,
+                bounceRate: cloudflareData?.bounceRate || 0,
+                avgSessionDuration: cloudflareData?.avgSessionDuration || 0,
+                bandwidth: cloudflareData?.bandwidth || 0,
+                requests: cloudflareData?.requests || 0,
+                uniqueVisitors: cloudflareData?.uniqueVisitors || 0,
+                countries: cloudflareData?.countries || [],
+                topPages: cloudflareData?.topPages || [],
+                timeseries: cloudflareData?.timeseries || [],
+                configured: cloudflareData?.success || cloudflareData?.configured || false
+            };
+        } catch (error) {
+            console.log('Website analytics not available:', error.message);
+            return null;
+        }
+    }
+
+    getLocalVisitorData() {
+        // Simple visitor tracking using localStorage
+        try {
+            const visitorData = JSON.parse(localStorage.getItem('steelcanvas_analytics') || '{}');
+            const now = Date.now();
+            
+            // Initialize if not exists
+            if (!visitorData.firstVisit) {
+                visitorData.firstVisit = now;
+                visitorData.totalVisits = 1;
+                visitorData.pageViews = 1;
+            } else {
+                visitorData.totalVisits = (visitorData.totalVisits || 0) + 1;
+                visitorData.pageViews = (visitorData.pageViews || 0) + 1;
+            }
+            
+            visitorData.lastVisit = now;
+            localStorage.setItem('steelcanvas_analytics', JSON.stringify(visitorData));
+            
+            return {
+                visitors: visitorData.totalVisits || 0,
+                pageViews: visitorData.pageViews || 0,
+                firstVisit: visitorData.firstVisit,
+                lastVisit: visitorData.lastVisit
+            };
+        } catch (error) {
+            return { visitors: 0, pageViews: 0 };
+        }
+    }
+
+    async fetchPatreonData() {
+        try {
+            // Patreon Creator API - requires OAuth and proper setup
+            // For now, we'll try to scrape public Patreon page data or use a proxy endpoint
+            const patreonUsername = 'SteelCanvasStudio';
+            
+            // Option 1: Try to get public data from Patreon page
+            const publicData = await this.fetchPublicPatreonData(patreonUsername);
+            
+            return publicData;
+        } catch (error) {
+            console.log('Patreon data not available:', error.message);
+            return null;
+        }
+    }
+
+    async fetchPublicPatreonData(username) {
+        try {
+            // Use the backend endpoint that fetches real Patreon data
+            const response = await fetch(`${this.apiBaseUrl}/patreon/public/stats`);
+            
+            if (response.ok) {
+                return await response.json();
+            }
+            
+            // Fallback: Return structure that matches expected Patreon data
+            return {
+                supporters: 0,
+                monthlyRevenue: 0,
+                goals: [],
+                totalPosts: 0,
+                isCreatorAccessTokenActive: false
+            };
+        } catch (error) {
+            console.log('Could not fetch Patreon data:', error.message);
+            return null;
+        }
     }
 
     generateDashboardData(realData = {}) {
@@ -108,34 +222,43 @@ class AdminDashboard {
         
         return {
             website: {
-                totalVisitors: Math.floor(Math.random() * 10000) + 40000,
-                pageViews: Math.floor(Math.random() * 20000) + 80000,
-                bounceRate: Math.floor(Math.random() * 10) + 25,
-                avgSessionDuration: Math.floor(Math.random() * 100) + 200,
-                newsletterSignups: Math.floor(Math.random() * 500) + 1000,
-                seoScore: Math.floor(Math.random() * 10) + 90
+                // Use real website analytics data where available
+                totalVisitors: realData.website?.totalVisitors || 0,
+                pageViews: realData.website?.pageViews || 0,
+                bounceRate: realData.website?.bounceRate || 0,
+                avgSessionDuration: realData.website?.avgSessionDuration || 0,
+                bandwidth: realData.website?.bandwidth || 0,
+                requests: realData.website?.requests || 0,
+                uniqueVisitors: realData.website?.uniqueVisitors || 0,
+                configured: realData.website?.configured || false,
+                newsletterSignups: 0, // This would need email service integration
+                seoScore: 0 // This would need SEO tool integration
             },
             analytics: {
                 overview: {
-                    totalPlayers: realData.overview?.totalPlayers || Math.floor(Math.random() * 500) + 1000,
-                    newPlayers: realData.overview?.playersToday || Math.floor(Math.random() * 50) + 20,
-                    totalSessions: realData.overview?.sessionsToday || Math.floor(Math.random() * 2000) + 5000,
-                    activeSessions: Math.floor(Math.random() * 30) + 10,
-                    averageSessionLength: (Math.random() * 10 + 15).toFixed(1),
-                    totalRevenue: Math.floor(Math.random() * 5000) + 10000,
-                    arpu: (Math.random() * 20 + 20).toFixed(2),
-                    dau: realData.overview?.playersToday || Math.floor(Math.random() * 100) + 200,
-                    averageScore: realData.overview?.averageScore || Math.floor(Math.random() * 1000) + 1500,
-                    highestScore: realData.overview?.highScore || Math.floor(Math.random() * 5000) + 8000
+                    // Use real data from backend, default to 0 if not available
+                    totalPlayers: realData.overview?.totalPlayers || 0,
+                    newPlayers: realData.overview?.playersToday || 0,
+                    totalSessions: realData.overview?.sessionsToday || 0,
+                    activeSessions: 0, // This would need real-time session tracking
+                    averageSessionLength: 0, // This would need session duration calculation
+                    totalRevenue: 0, // This would need payment integration
+                    arpu: 0, // This would be calculated from revenue/players
+                    dau: realData.overview?.playersToday || 0,
+                    averageScore: realData.overview?.averageScore || 0,
+                    highestScore: realData.overview?.highScore || 0
                 }
             },
             finance: {
-                totalRevenue: Math.floor(Math.random() * 1000) + 3000,
-                patreonRevenue: Math.floor(Math.random() * 500) + 2200,
-                mrr: Math.floor(Math.random() * 300) + 2000,
-                patreonSupporters: Math.floor(Math.random() * 20) + 50,
-                arpu: (Math.random() * 20 + 35).toFixed(2),
-                profitMargin: Math.floor(Math.random() * 15) + 70
+                // Use real Patreon data where available
+                totalRevenue: (realData.patreon?.monthlyRevenue || 0),
+                patreonRevenue: (realData.patreon?.monthlyRevenue || 0),
+                mrr: (realData.patreon?.monthlyRevenue || 0),
+                patreonSupporters: (realData.patreon?.supporters || 0),
+                arpu: realData.patreon?.supporters > 0 ? (realData.patreon.monthlyRevenue / realData.patreon.supporters) : 0,
+                profitMargin: 0, // This would need expense tracking
+                goals: realData.patreon?.goals || [],
+                totalPosts: realData.patreon?.totalPosts || 0
             },
             lastUpdated: now.toLocaleString()
         };
@@ -171,38 +294,38 @@ class AdminDashboard {
             {
                 label: 'Total Visitors',
                 value: websiteData.totalVisitors.toLocaleString(),
-                change: '+15%',
-                positive: true
+                change: websiteData.configured ? 'Live Data' : 'No Data',
+                positive: websiteData.configured
             },
             {
                 label: 'Page Views',
                 value: websiteData.pageViews.toLocaleString(),
-                change: '+12%',
-                positive: true
+                change: websiteData.configured ? 'Live Data' : 'No Data',
+                positive: websiteData.configured
             },
             {
-                label: 'Bounce Rate',
-                value: `${websiteData.bounceRate}%`,
-                change: '-5%',
-                positive: true
+                label: 'Bandwidth',
+                value: `${Math.round(websiteData.bandwidth / 1024 / 1024)} MB`,
+                change: websiteData.configured ? 'Live Data' : 'No Data',
+                positive: websiteData.configured
             },
             {
-                label: 'Avg Session Duration',
-                value: `${websiteData.avgSessionDuration}s`,
-                change: '+8%',
-                positive: true
+                label: 'Requests',
+                value: websiteData.requests.toLocaleString(),
+                change: websiteData.configured ? 'Live Data' : 'No Data',
+                positive: websiteData.configured
             },
             {
-                label: 'Newsletter Signups',
-                value: websiteData.newsletterSignups.toLocaleString(),
-                change: '+22%',
-                positive: true
+                label: 'Unique Visitors',
+                value: websiteData.uniqueVisitors.toLocaleString(),
+                change: websiteData.configured ? 'Live Data' : 'No Data',
+                positive: websiteData.configured
             },
             {
-                label: 'SEO Score',
-                value: websiteData.seoScore,
-                change: '+3%',
-                positive: true
+                label: 'Cloudflare Status',
+                value: websiteData.configured ? 'Connected' : 'Offline',
+                change: websiteData.configured ? 'Active' : 'Setup Required',
+                positive: websiteData.configured
             }
         ];
 
@@ -223,42 +346,44 @@ class AdminDashboard {
 
         const analytics = this.dashboardData.analytics.overview;
         
+        const hasGameData = analytics.totalPlayers > 0 || analytics.dau > 0 || analytics.averageScore > 0;
+        
         const metrics = [
             {
                 label: 'Total Players',
                 value: analytics.totalPlayers.toLocaleString(),
-                change: '+12%',
-                positive: true
+                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                positive: hasGameData
             },
             {
                 label: 'Active Sessions',
                 value: analytics.activeSessions,
-                change: '+5%',
-                positive: true
+                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                positive: hasGameData
             },
             {
                 label: 'Daily Active Users',
                 value: analytics.dau.toLocaleString(),
-                change: '+8%',
-                positive: true
+                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                positive: hasGameData
             },
             {
                 label: 'Average Score',
                 value: analytics.averageScore.toLocaleString(),
-                change: '+15%',
-                positive: true
+                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                positive: hasGameData
             },
             {
                 label: 'Highest Score',
                 value: analytics.highestScore.toLocaleString(),
-                change: '+3%',
-                positive: true
+                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                positive: hasGameData
             },
             {
-                label: 'Session Length',
-                value: `${analytics.averageSessionLength}min`,
-                change: '+7%',
-                positive: true
+                label: 'Total Sessions',
+                value: analytics.totalSessions.toLocaleString(),
+                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                positive: hasGameData
             }
         ];
 
@@ -279,41 +404,43 @@ class AdminDashboard {
 
         const finance = this.dashboardData.finance;
         
+        const hasPatreonData = finance.patreonSupporters > 0 || finance.patreonRevenue > 0;
+        
         const metrics = [
             {
                 label: 'Total Revenue',
-                value: `$${finance.totalRevenue.toLocaleString()}`,
-                change: '+18%',
-                positive: true
+                value: `$${finance.totalRevenue.toFixed(2)}`,
+                change: hasPatreonData ? 'Live Data' : 'No Revenue Yet',
+                positive: hasPatreonData
             },
             {
                 label: 'Patreon Revenue',
-                value: `$${finance.patreonRevenue.toLocaleString()}`,
-                change: '+22%',
-                positive: true
+                value: `$${finance.patreonRevenue.toFixed(2)}`,
+                change: hasPatreonData ? 'Live Data' : 'No Supporters',
+                positive: hasPatreonData
             },
             {
                 label: 'Monthly Recurring Revenue',
-                value: `$${finance.mrr.toLocaleString()}`,
-                change: '+14%',
-                positive: true
+                value: `$${finance.mrr.toFixed(2)}`,
+                change: hasPatreonData ? 'Live Data' : 'No Revenue Yet',
+                positive: hasPatreonData
             },
             {
                 label: 'Patreon Supporters',
                 value: finance.patreonSupporters,
-                change: '+8%',
-                positive: true
+                change: hasPatreonData ? 'Live Data' : 'Campaign Active',
+                positive: hasPatreonData
             },
             {
                 label: 'ARPU',
-                value: `$${finance.arpu}`,
-                change: '+5%',
-                positive: true
+                value: `$${finance.arpu.toFixed(2)}`,
+                change: hasPatreonData ? 'Calculated' : 'N/A',
+                positive: hasPatreonData
             },
             {
-                label: 'Profit Margin',
-                value: `${finance.profitMargin}%`,
-                change: '+2%',
+                label: 'Patreon Posts',
+                value: finance.totalPosts,
+                change: 'Live Data',
                 positive: true
             }
         ];
@@ -1064,7 +1191,7 @@ class AdminDashboard {
             date.setDate(date.getDate() + i);
             data.push({
                 date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                visitors: 800 + Math.floor(Math.random() * 400)
+                visitors: 0 // Real website analytics not implemented yet
             });
         }
         return data;
@@ -1072,11 +1199,11 @@ class AdminDashboard {
 
     generatePageViewsData() {
         return [
-            { page: 'Home', views: 12500 },
-            { page: 'Games', views: 8900 },
-            { page: 'About', views: 5600 },
-            { page: 'News', views: 4200 },
-            { page: 'Community', views: 3800 }
+            { page: 'Home', views: 0 },
+            { page: 'Games', views: 0 },
+            { page: 'About', views: 0 },
+            { page: 'News', views: 0 },
+            { page: 'Community', views: 0 }
         ];
     }
 
@@ -1090,8 +1217,8 @@ class AdminDashboard {
             date.setDate(date.getDate() + i);
             data.push({
                 date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                players: 180 + Math.floor(Math.random() * 80),
-                newPlayers: 10 + Math.floor(Math.random() * 15)
+                players: 0, // Real player data from backend will be used when available
+                newPlayers: 0
             });
         }
         return data;
@@ -1099,45 +1226,45 @@ class AdminDashboard {
 
     generateRevenueTrendData() {
         return [
-            { month: 'Jan', revenue: 1250 },
-            { month: 'Feb', revenue: 1680 },
-            { month: 'Mar', revenue: 2050 },
-            { month: 'Apr', revenue: 2380 },
-            { month: 'May', revenue: 2650 },
-            { month: 'Jun', revenue: 2500 }
+            { month: 'Jan', revenue: 0 },
+            { month: 'Feb', revenue: 0 },
+            { month: 'Mar', revenue: 0 },
+            { month: 'Apr', revenue: 0 },
+            { month: 'May', revenue: 0 },
+            { month: 'Jun', revenue: 0 }
         ];
     }
 
     generatePatreonGrowthData() {
         return [
-            { month: 'Jan', supporters: 25, revenue: 1250 },
-            { month: 'Feb', supporters: 32, revenue: 1680 },
-            { month: 'Mar', supporters: 41, revenue: 2050 },
-            { month: 'Apr', supporters: 48, revenue: 2380 },
-            { month: 'May', supporters: 54, revenue: 2650 },
-            { month: 'Jun', supporters: 58, revenue: 2500 }
+            { month: 'Jan', supporters: 0, revenue: 0 },
+            { month: 'Feb', supporters: 0, revenue: 0 },
+            { month: 'Mar', supporters: 0, revenue: 0 },
+            { month: 'Apr', supporters: 0, revenue: 0 },
+            { month: 'May', supporters: 0, revenue: 0 },
+            { month: 'Jun', supporters: 0, revenue: 0 }
         ];
     }
 
     generateMRRData() {
         return [
-            { month: 'Jan', mrr: 1250 },
-            { month: 'Feb', mrr: 1680 },
-            { month: 'Mar', mrr: 2050 },
-            { month: 'Apr', mrr: 2380 },
-            { month: 'May', mrr: 2650 },
-            { month: 'Jun', mrr: 2500 }
+            { month: 'Jan', mrr: 0 },
+            { month: 'Feb', mrr: 0 },
+            { month: 'Mar', mrr: 0 },
+            { month: 'Apr', mrr: 0 },
+            { month: 'May', mrr: 0 },
+            { month: 'Jun', mrr: 0 }
         ];
     }
 
     generateProfitMarginData() {
         return [
-            { month: 'Jan', margin: 65 },
-            { month: 'Feb', margin: 72 },
-            { month: 'Mar', margin: 75 },
-            { month: 'Apr', margin: 78 },
-            { month: 'May', margin: 80 },
-            { month: 'Jun', margin: 78 }
+            { month: 'Jan', margin: 0 },
+            { month: 'Feb', margin: 0 },
+            { month: 'Mar', margin: 0 },
+            { month: 'Apr', margin: 0 },
+            { month: 'May', margin: 0 },
+            { month: 'Jun', margin: 0 }
         ];
     }
 
