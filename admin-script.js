@@ -140,7 +140,7 @@ class AdminDashboard {
                 countries: cloudflareData?.countries || [],
                 topPages: cloudflareData?.topPages || [],
                 timeseries: cloudflareData?.timeseries || [],
-                configured: cloudflareData?.success || cloudflareData?.configured || false
+                configured: cloudflareData?.success === true && cloudflareData?.configured === true
             };
         } catch (error) {
             console.log('Website analytics not available:', error.message);
