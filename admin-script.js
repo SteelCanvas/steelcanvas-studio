@@ -66,21 +66,37 @@ class AdminDashboard {
 
     async loadDashboardData() {
         try {
-            // Show loading states
-            this.showLoadingStates();
+            // Fetch real data from multiple endpoints
+            const [analyticsResponse, publicStatsResponse, leaderboardResponse] = await Promise.all([
+                fetch(`${this.apiBaseUrl}/analytics/dashboard-data`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.getAuthToken()
+                    }
+                }).catch(() => null),
+                fetch(`${this.apiBaseUrl}/public/stats/overview`).catch(() => null),
+                fetch(`${this.apiBaseUrl}/public/leaderboard/top10`).catch(() => null)
+            ]);
 
-            // Try to fetch real data from the backend
-            const response = await fetch(`${this.apiBaseUrl}/analytics/dashboard-data`, {
-                headers: {
-                    'Authorization': 'Bearer ' + this.getAuthToken()
-                }
-            });
+            let dashboardData = {};
+            let publicStats = {};
+            let leaderboardData = [];
 
-            if (response.ok) {
-                this.dashboardData = await response.json();
-            } else {
-                throw new Error('Failed to fetch data');
+            // Parse responses if available
+            if (analyticsResponse && analyticsResponse.ok) {
+                dashboardData = await analyticsResponse.json();
             }
+            
+            if (publicStatsResponse && publicStatsResponse.ok) {
+                publicStats = await publicStatsResponse.json();
+            }
+            
+            if (leaderboardResponse && leaderboardResponse.ok) {
+                leaderboardData = await leaderboardResponse.json();
+            }
+
+            // Merge real data with fallback data
+            this.dashboardData = this.mergeWithFallbackData(dashboardData, publicStats, leaderboardData);
+            
         } catch (error) {
             console.log('Using fallback data:', error.message);
             // Use fallback data when backend is not available
@@ -96,6 +112,9 @@ class AdminDashboard {
     }
 
     showLoadingStates() {
+        // Only show loading on first load, not on refresh
+        if (this.dashboardData) return;
+        
         // Show loading for all metric grids
         const grids = ['websiteMetricsGrid', 'gameMetricsGrid', 'financeMetricsGrid'];
         grids.forEach(gridId => {
@@ -110,6 +129,32 @@ class AdminDashboard {
         chartContainers.forEach(container => {
             container.innerHTML = '<div class="loading">Loading chart...</div>';
         });
+    }
+
+    mergeWithFallbackData(dashboardData, publicStats, leaderboardData) {
+        const fallback = this.getFallbackData();
+        
+        // Merge public stats with game analytics
+        if (publicStats && Object.keys(publicStats).length > 0) {
+            fallback.analytics.overview = {
+                ...fallback.analytics.overview,
+                totalPlayers: publicStats.totalPlayers || fallback.analytics.overview.totalPlayers,
+                newPlayers: publicStats.playersToday || fallback.analytics.overview.newPlayers,
+                totalSessions: publicStats.sessionsToday || fallback.analytics.overview.totalSessions,
+                averageScore: publicStats.averageScore || fallback.analytics.overview.averageScore,
+                highScore: publicStats.highScore || fallback.analytics.overview.highScore
+            };
+        }
+
+        // Use real analytics data if available
+        if (dashboardData && Object.keys(dashboardData).length > 0) {
+            return {
+                ...fallback,
+                ...dashboardData
+            };
+        }
+
+        return fallback;
     }
 
     renderAllTabs() {
@@ -289,33 +334,44 @@ class AdminDashboard {
     }
 
     renderAllCharts() {
-        // Website Charts
-        this.renderWebsiteTrafficChart();
-        this.renderPageViewsChart();
-        this.renderTrafficSourcesChart();
-        this.renderDeviceUsageChart();
+        // Use setTimeout to ensure DOM is ready
+        setTimeout(() => {
+            // Website Charts
+            this.renderWebsiteTrafficChart();
+            this.renderPageViewsChart();
+            this.renderTrafficSourcesChart();
+            this.renderDeviceUsageChart();
 
-        // Game Charts
-        this.renderDailyPlayersChart();
-        this.renderSessionDurationChart();
-        this.renderScoreDistributionChart();
-        this.renderPlatformUsageChart();
-        this.renderRetentionCohortChart();
-        this.renderGameplayPatternsChart();
+            // Game Charts
+            this.renderDailyPlayersChart();
+            this.renderSessionDurationChart();
+            this.renderScoreDistributionChart();
+            this.renderPlatformUsageChart();
+            this.renderRetentionCohortChart();
+            this.renderGameplayPatternsChart();
 
-        // Finance Charts
-        this.renderRevenueTrendChart();
-        this.renderPatreonGrowthChart();
-        this.renderRevenueSourcesChart();
-        this.renderMRRChart();
-        this.renderExpenseBreakdownChart();
-        this.renderProfitMarginChart();
+            // Finance Charts
+            this.renderRevenueTrendChart();
+            this.renderPatreonGrowthChart();
+            this.renderRevenueSourcesChart();
+            this.renderMRRChart();
+            this.renderExpenseBreakdownChart();
+            this.renderProfitMarginChart();
+        }, 100);
     }
 
     // Website Charts
     renderWebsiteTrafficChart() {
         const ctx = document.getElementById('websiteTrafficChart');
         if (!ctx) return;
+
+        // Clear loading state
+        const container = ctx.closest('.chart-container');
+        if (container && container.querySelector('.loading')) {
+            container.innerHTML = '<canvas id="websiteTrafficChart"></canvas>';
+            const newCtx = document.getElementById('websiteTrafficChart');
+            if (!newCtx) return;
+        }
 
         if (this.charts.websiteTraffic) {
             this.charts.websiteTraffic.destroy();
@@ -329,8 +385,8 @@ class AdminDashboard {
                 datasets: [{
                     label: 'Unique Visitors',
                     data: data.map(d => d.visitors),
-                    borderColor: '#3498db',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderColor: '#C0C0C0',
+                    backgroundColor: 'rgba(192, 192, 192, 0.1)',
                     fill: true,
                     tension: 0.4
                 }]
@@ -354,8 +410,8 @@ class AdminDashboard {
                 datasets: [{
                     label: 'Page Views',
                     data: [12500, 8900, 5600, 4200, 3800, 2900],
-                    backgroundColor: '#3498db',
-                    borderColor: '#2980b9',
+                    backgroundColor: '#ff6b47',
+                    borderColor: '#ff6b47',
                     borderWidth: 1
                 }]
             },
@@ -377,9 +433,9 @@ class AdminDashboard {
                 labels: ['Direct', 'Google', 'Social Media', 'Referrals', 'Email'],
                 datasets: [{
                     data: [35, 30, 20, 10, 5],
-                    backgroundColor: ['#3498db', '#27ae60', '#f39c12', '#e74c3c', '#9b59b6'],
+                    backgroundColor: ['#C0C0C0', '#ff6b47', '#708090', '#2d2d2d', '#778899'],
                     borderWidth: 2,
-                    borderColor: '#fff'
+                    borderColor: '#1a1a1a'
                 }]
             },
             options: this.getDoughnutChartOptions()
@@ -400,9 +456,9 @@ class AdminDashboard {
                 labels: ['Desktop', 'Mobile', 'Tablet'],
                 datasets: [{
                     data: [45, 50, 5],
-                    backgroundColor: ['#3498db', '#27ae60', '#f39c12'],
+                    backgroundColor: ['#C0C0C0', '#ff6b47', '#708090'],
                     borderWidth: 2,
-                    borderColor: '#fff'
+                    borderColor: '#1a1a1a'
                 }]
             },
             options: this.getDoughnutChartOptions()
@@ -426,15 +482,15 @@ class AdminDashboard {
                 datasets: [{
                     label: 'Total Players',
                     data: data.map(d => d.players),
-                    borderColor: '#3498db',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderColor: '#C0C0C0',
+                    backgroundColor: 'rgba(192, 192, 192, 0.1)',
                     fill: true,
                     tension: 0.4
                 }, {
                     label: 'New Players',
                     data: data.map(d => d.newPlayers),
-                    borderColor: '#27ae60',
-                    backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                    borderColor: '#ff6b47',
+                    backgroundColor: 'rgba(255, 107, 71, 0.1)',
                     fill: true,
                     tension: 0.4
                 }]
@@ -841,7 +897,6 @@ class AdminDashboard {
     }
 
     renderGameTables() {
-        this.renderTopPlayersTable();
         this.renderGamePerformanceTable();
     }
 
@@ -893,26 +948,6 @@ class AdminDashboard {
         `).join('');
     }
 
-    renderTopPlayersTable() {
-        const tbody = document.querySelector('#topPlayersTable tbody');
-        if (!tbody) return;
-
-        const playerAnalytics = this.dashboardData.analytics?.playerAnalytics || this.dashboardData.playerAnalytics;
-        const topPlayers = playerAnalytics?.topPlayers || [
-            { username: 'DragonSlayer', score: 9790, rank: 1, totalGames: 45 },
-            { username: 'SteelCommander', score: 9493, rank: 2, totalGames: 38 },
-            { username: 'CombatLegend', score: 9308, rank: 3, totalGames: 42 }
-        ];
-
-        tbody.innerHTML = topPlayers.map(player => `
-            <tr>
-                <td>${player.rank}</td>
-                <td>${player.username}</td>
-                <td>${player.score.toLocaleString()}</td>
-                <td>${player.totalGames || 'N/A'}</td>
-            </tr>
-        `).join('');
-    }
 
     renderGamePerformanceTable() {
         const tbody = document.querySelector('#gamePerformanceTable tbody');
@@ -1075,12 +1110,32 @@ class AdminDashboard {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'top'
+                    position: 'top',
+                    labels: {
+                        color: '#e8e8e8',
+                        font: {
+                            family: 'Segoe UI'
+                        }
+                    }
                 }
             },
             scales: {
+                x: {
+                    ticks: {
+                        color: '#A9A9A9'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#A9A9A9'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
                 }
             }
         };
@@ -1092,7 +1147,13 @@ class AdminDashboard {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    position: 'bottom',
+                    labels: {
+                        color: '#e8e8e8',
+                        font: {
+                            family: 'Segoe UI'
+                        }
+                    }
                 }
             }
         };
@@ -1101,7 +1162,7 @@ class AdminDashboard {
     startAutoRefresh() {
         this.refreshInterval = setInterval(() => {
             this.loadDashboardData();
-        }, 30000); // Refresh every 30 seconds
+        }, 120000); // Refresh every 2 minutes
     }
 
     refreshData() {

@@ -19,16 +19,29 @@
     
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
+            /* Steel Canvas Studio Theme Colors */
+            --primary-color: #C0C0C0;        /* Steel Grey */
+            --secondary-color: #2d2d2d;      /* Deep Grey */
+            --accent-color: #ff6b47;         /* Orange */
             --success-color: #27ae60;
             --warning-color: #f39c12;
-            --background-color: #ecf0f1;
-            --text-color: #2c3e50;
-            --card-bg: #ffffff;
-            --border-color: #bdc3c7;
-            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --error-color: #e74c3c;
+            --background-dark: #000000;      /* Pure Black */
+            --background-light: #1a1a1a;     /* Dark Grey */
+            --text-primary: #e8e8e8;         /* Light Grey */
+            --text-secondary: #A9A9A9;       /* Medium Grey */
+            --text-muted: #696969;           /* Muted Grey */
+            --border-color: #708090;         /* Slate Grey */
+            --border-light: #444;            /* Light Border */
+            --card-bg: rgba(255, 255, 255, 0.1);  /* Glassmorphism */
+            --card-bg-solid: #1a1a1a;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+            --glass-backdrop: blur(10px);
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(45deg, #708090, #778899);
+            --gradient-secondary: linear-gradient(135deg, #2F4F4F 0%, #1a1a1a 100%);
+            --gradient-hero: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #2F4F4F 100%);
         }
 
         * {
@@ -39,9 +52,10 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
+            background: var(--gradient-hero);
+            color: var(--text-primary);
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         /* Login Form Styles */
@@ -50,13 +64,15 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: var(--gradient-hero);
         }
 
         .login-form {
             background: var(--card-bg);
+            backdrop-filter: var(--glass-backdrop);
+            border: 1px solid var(--border-light);
             padding: 2rem;
-            border-radius: 10px;
+            border-radius: 16px;
             box-shadow: var(--shadow);
             width: 100%;
             max-width: 400px;
@@ -66,6 +82,7 @@
         .login-form h1 {
             margin-bottom: 1.5rem;
             color: var(--primary-color);
+            font-weight: 600;
         }
 
         .form-group {
@@ -82,35 +99,41 @@
         .form-group input {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
             font-size: 1rem;
+            background: var(--card-bg-solid);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(255, 107, 71, 0.2);
         }
 
         .login-btn {
-            background: var(--secondary-color);
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--text-primary);
             padding: 0.75rem 2rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
             width: 100%;
         }
 
         .login-btn:hover {
-            background: #2980b9;
+            background: var(--accent-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 71, 0.3);
         }
 
         .error-message {
-            color: var(--accent-color);
+            color: var(--error-color);
             margin-top: 1rem;
             font-size: 0.9rem;
         }
@@ -119,11 +142,13 @@
         .dashboard {
             display: none;
             min-height: 100vh;
-            background-color: var(--background-color);
+            background: var(--gradient-hero);
         }
 
         .dashboard-header {
             background: var(--card-bg);
+            backdrop-filter: var(--glass-backdrop);
+            border-bottom: 1px solid var(--border-light);
             padding: 1rem 2rem;
             box-shadow: var(--shadow);
             display: flex;
@@ -149,10 +174,12 @@
         .export-btn, .logout-btn, .refresh-btn {
             padding: 0.5rem 1rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 0.9rem;
-            transition: background-color 0.3s;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
         }
 
         .export-btn {
@@ -162,24 +189,32 @@
 
         .export-btn:hover {
             background: #229954;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
         }
 
         .refresh-btn {
-            background: var(--warning-color);
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--text-primary);
         }
 
         .refresh-btn:hover {
-            background: #e67e22;
+            background: var(--accent-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 71, 0.3);
         }
 
         .logout-btn {
-            background: var(--accent-color);
-            color: white;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
         }
 
         .logout-btn:hover {
-            background: #c0392b;
+            background: var(--error-color);
+            border-color: var(--error-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
         }
 
         .dashboard-content {
@@ -197,23 +232,31 @@
 
         .metric-card {
             background: var(--card-bg);
+            backdrop-filter: var(--glass-backdrop);
+            border: 1px solid var(--border-light);
             padding: 1.5rem;
-            border-radius: 10px;
+            border-radius: 16px;
             box-shadow: var(--shadow);
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
         }
 
         .metric-value {
             font-size: 2rem;
             font-weight: bold;
-            color: var(--secondary-color);
+            color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
 
         .metric-label {
-            color: var(--text-color);
+            color: var(--text-secondary);
             font-size: 0.9rem;
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         .metric-change {
@@ -238,9 +281,17 @@
 
         .chart-card {
             background: var(--card-bg);
+            backdrop-filter: var(--glass-backdrop);
+            border: 1px solid var(--border-light);
             padding: 1.5rem;
-            border-radius: 10px;
+            border-radius: 16px;
             box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
         }
 
         .chart-title {
@@ -288,9 +339,17 @@
 
         .table-card {
             background: var(--card-bg);
+            backdrop-filter: var(--glass-backdrop);
+            border: 1px solid var(--border-light);
             padding: 1.5rem;
-            border-radius: 10px;
+            border-radius: 16px;
             box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .table-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
         }
 
         .table-title {
@@ -307,20 +366,22 @@
         }
 
         .data-table th {
-            background: var(--background-color);
+            background: var(--card-bg-solid);
             padding: 0.75rem;
             text-align: left;
             font-weight: 600;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
         }
 
         .data-table td {
             padding: 0.75rem;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-secondary);
         }
 
         .data-table tr:hover {
-            background: var(--background-color);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .status-indicator {
@@ -346,7 +407,8 @@
         /* Tab Navigation Styles */
         .tab-nav {
             background: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: var(--glass-backdrop);
+            border-bottom: 1px solid var(--border-light);
             padding: 0 2rem;
             display: flex;
             gap: 0;
@@ -359,21 +421,21 @@
             cursor: pointer;
             font-size: 1rem;
             font-weight: 500;
-            color: var(--text-color);
+            color: var(--text-secondary);
             border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
             position: relative;
         }
 
         .tab-button:hover {
-            background: var(--background-color);
-            color: var(--secondary-color);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
         }
 
         .tab-button.active {
-            color: var(--secondary-color);
-            border-bottom-color: var(--secondary-color);
-            background: var(--background-color);
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+            background: rgba(255, 107, 71, 0.1);
         }
 
         .tab-content {
@@ -390,7 +452,10 @@
             font-weight: 600;
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 2px solid var(--accent-color);
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
         }
 
         /* Responsive Design */
@@ -603,23 +668,6 @@
 
                 <!-- Game Tables -->
                 <section class="data-tables">
-                    <div class="table-card">
-                        <h3 class="table-title">Top Players</h3>
-                        <table class="data-table" id="topPlayersTable">
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Username</th>
-                                    <th>High Score</th>
-                                    <th>Total Games</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Will be populated by JavaScript -->
-                            </tbody>
-                        </table>
-                    </div>
-
                     <div class="table-card">
                         <h3 class="table-title">Game Performance</h3>
                         <table class="data-table" id="gamePerformanceTable">
