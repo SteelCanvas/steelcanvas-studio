@@ -101,7 +101,7 @@
                 <div class="hero-content">
                     <h1>About Steel Canvas Studio</h1>
                     <p class="hero-subtitle">Where creativity meets technology to forge unforgettable gaming adventures</p>
-                    <a href="#mission" class="cta-button" aria-label="Learn more about our mission and values" onclick="scrollToMission(); return false;">About Us</a>
+                    <a href="#mission" class="cta-button" aria-label="Learn more about our mission and values">About Us</a>
                 </div>
             </div>
         </section>
@@ -259,20 +259,5 @@
     </footer>
 
     <script src="script.js"></script>
-    <script>
-        function scrollToMission() {
-            console.log('About Us button clicked!');
-            const missionSection = document.getElementById('mission');
-            if (missionSection) {
-                missionSection.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-                console.log('Scrolling to mission section');
-            } else {
-                console.error('Mission section not found!');
-            }
-        }
-    </script>
 </body>
 </html>
