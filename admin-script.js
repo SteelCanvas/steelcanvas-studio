@@ -1,7 +1,7 @@
 // Admin Dashboard JavaScript
 class AdminDashboard {
     constructor() {
-        this.apiBaseUrl = 'http://localhost:8080/api';
+        this.apiBaseUrl = 'http://localhost:8081/api';
         this.charts = {};
         this.dashboardData = null;
         this.refreshInterval = null;
