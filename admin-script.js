@@ -230,7 +230,7 @@ class AdminDashboard {
                 bandwidth: realData.website?.bandwidth || 0,
                 requests: realData.website?.requests || 0,
                 uniqueVisitors: realData.website?.uniqueVisitors || 0,
-                configured: realData.website?.configured || false,
+                configured: realData.website?.configured === true,
                 newsletterSignups: 0, // This would need email service integration
                 seoScore: 0 // This would need SEO tool integration
             },
