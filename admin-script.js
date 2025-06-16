@@ -1,6 +1,22 @@
 // Admin Dashboard JavaScript
+//
+// DEPLOYMENT CONFIGURATION:
+// 
+// LOCAL DEVELOPMENT: Uses static JSON files (current setup)
+// - Backend exports data to api-data/ directory every 5 minutes
+// - No port forwarding needed through firewall
+// - Data source: api-data/*.json files
+//
+// AWS DEPLOYMENT: Switch to direct API calls 
+// - Uncomment API fetch calls in loadDashboardData()
+// - Comment out JSON file reads
+// - Set backend URL to AWS endpoint
+// - Disable backend export service: website.export.enabled=false
+//
 class AdminDashboard {
     constructor() {
+        // LOCAL: Use localhost for testing API endpoints when backend is accessible
+        // AWS: Change to production backend URL (e.g., https://api.steelcanvas.studio)
         this.apiBaseUrl = 'http://localhost:8081/api';
         this.charts = {};
         this.dashboardData = null;
@@ -68,12 +84,32 @@ class AdminDashboard {
         try {
             console.log('Loading dashboard data...');
             
-            // Fetch data from local JSON files exported by backend
+            // LOCAL DEVELOPMENT: Use static JSON files exported by backend
+            // Backend writes data to these files every 5 minutes
             const [overviewData, cloudflareData, patreonData] = await Promise.all([
                 fetch('api-data/overview.json').then(r => r.ok ? r.json() : null).catch(() => null),
                 fetch('api-data/cloudflare.json').then(r => r.ok ? r.json() : null).catch(() => null),
                 fetch('api-data/patreon.json').then(r => r.ok ? r.json() : null).catch(() => null)
             ]);
+            
+            // AWS DEPLOYMENT: Uncomment below for direct backend API access when deployed
+            // Available API endpoints:
+            // - GET /api/public/stats/overview - Game statistics (players, scores, sessions)
+            // - GET /api/public/cloudflare/analytics?days=30 - Website analytics from Cloudflare
+            // - GET /api/patreon/public/stats - Patreon supporter and revenue data
+            // - GET /api/public/leaderboard/top10 - Top 10 player leaderboard
+            // - GET /api/public/activity/recent - Recent game activity
+            //
+            // const [overviewResponse, cloudflareResponse, patreonResponse] = await Promise.all([
+            //     fetch(`${this.apiBaseUrl}/public/stats/overview`).catch(() => null),
+            //     fetch(`${this.apiBaseUrl}/public/cloudflare/analytics?days=30`).catch(() => null),
+            //     fetch(`${this.apiBaseUrl}/patreon/public/stats`).catch(() => null)
+            // ]);
+            // 
+            // let overviewData = null, cloudflareData = null, patreonData = null;
+            // if (overviewResponse?.ok) overviewData = await overviewResponse.json();
+            // if (cloudflareResponse?.ok) cloudflareData = await cloudflareResponse.json();
+            // if (patreonResponse?.ok) patreonData = await patreonResponse.json();
             
             let realData = {};
             
