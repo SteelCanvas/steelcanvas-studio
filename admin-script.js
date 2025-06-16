@@ -230,7 +230,12 @@ class AdminDashboard {
                 bandwidth: realData.website?.bandwidth || 0,
                 requests: realData.website?.requests || 0,
                 uniqueVisitors: realData.website?.uniqueVisitors || 0,
-                configured: realData.website?.configured === true,
+                configured: (function() {
+                    const result = realData.website?.configured === true;
+                    console.log('DEBUG: realData.website?.configured =', realData.website?.configured);
+                    console.log('DEBUG: configured result =', result);
+                    return result;
+                })(),
                 newsletterSignups: 0, // This would need email service integration
                 seoScore: 0 // This would need SEO tool integration
             },
