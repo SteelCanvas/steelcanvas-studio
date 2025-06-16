@@ -68,40 +68,28 @@ class AdminDashboard {
         try {
             console.log('Loading dashboard data...');
             
-            // Try to fetch real data from the backend
-            const [publicStatsResponse, leaderboardResponse, activityResponse, websiteAnalytics, patreonData] = await Promise.all([
-                fetch(`${this.apiBaseUrl}/public/stats/overview`).catch(() => null),
-                fetch(`${this.apiBaseUrl}/public/leaderboard/top10`).catch(() => null),
-                fetch(`${this.apiBaseUrl}/public/activity/recent`).catch(() => null),
-                this.fetchWebsiteAnalytics().catch(() => null),
-                this.fetchPatreonData().catch(() => null)
+            // Fetch data from local JSON files exported by backend
+            const [overviewData, cloudflareData, patreonData] = await Promise.all([
+                fetch('api-data/overview.json').then(r => r.ok ? r.json() : null).catch(() => null),
+                fetch('api-data/cloudflare.json').then(r => r.ok ? r.json() : null).catch(() => null),
+                fetch('api-data/patreon.json').then(r => r.ok ? r.json() : null).catch(() => null)
             ]);
             
             let realData = {};
             
-            if (publicStatsResponse?.ok) {
-                realData.overview = await publicStatsResponse.json();
-                console.log('Real overview data loaded:', realData.overview);
+            if (overviewData) {
+                realData.overview = overviewData;
+                console.log('Overview data loaded from file:', realData.overview);
             }
             
-            if (leaderboardResponse?.ok) {
-                realData.leaderboard = await leaderboardResponse.json();
-                console.log('Real leaderboard data loaded:', realData.leaderboard);
-            }
-            
-            if (activityResponse?.ok) {
-                realData.activity = await activityResponse.json();
-                console.log('Real activity data loaded:', realData.activity);
-            }
-            
-            if (websiteAnalytics) {
-                realData.website = websiteAnalytics;
-                console.log('Real website analytics loaded:', realData.website);
+            if (cloudflareData) {
+                realData.website = cloudflareData;
+                console.log('Cloudflare data loaded from file:', realData.website);
             }
             
             if (patreonData) {
                 realData.patreon = patreonData;
-                console.log('Real Patreon data loaded:', realData.patreon);
+                console.log('Patreon data loaded from file:', realData.patreon);
             }
             
             // Use real data where available
@@ -115,50 +103,6 @@ class AdminDashboard {
         this.renderAllTabs();
     }
 
-    async fetchWebsiteAnalytics() {
-        try {
-            // Try to get website data from backend Cloudflare integration
-            const cloudflareResponse = await fetch(`${this.apiBaseUrl}/public/cloudflare/analytics?days=30`);
-            
-            // Simple visitor tracking from browser storage as fallback
-            const localVisitorData = this.getLocalVisitorData();
-            
-            let cloudflareData = null;
-            if (cloudflareResponse.ok) {
-                cloudflareData = await cloudflareResponse.json();
-                console.log('Cloudflare analytics loaded:', cloudflareData);
-            }
-            
-            return {
-                totalVisitors: cloudflareData?.visitors || localVisitorData.visitors || 0,
-                pageViews: cloudflareData?.pageViews || localVisitorData.pageViews || 0,
-                bounceRate: cloudflareData?.bounceRate || 0,
-                avgSessionDuration: cloudflareData?.avgSessionDuration || 0,
-                bandwidth: cloudflareData?.bandwidth || 0,
-                requests: cloudflareData?.requests || 0,
-                uniqueVisitors: cloudflareData?.uniqueVisitors || 0,
-                countries: cloudflareData?.countries || [],
-                topPages: cloudflareData?.topPages || [],
-                timeseries: cloudflareData?.timeseries || [],
-                configured: cloudflareData?.success === true && cloudflareData?.configured === true
-            };
-        } catch (error) {
-            console.log('Website analytics not available:', error.message);
-            return {
-                totalVisitors: 0,
-                pageViews: 0,
-                bounceRate: 0,
-                avgSessionDuration: 0,
-                bandwidth: 0,
-                requests: 0,
-                uniqueVisitors: 0,
-                countries: [],
-                topPages: [],
-                timeseries: [],
-                configured: false
-            };
-        }
-    }
 
     getLocalVisitorData() {
         // Simple visitor tracking using localStorage
@@ -190,50 +134,6 @@ class AdminDashboard {
         }
     }
 
-    async fetchPatreonData() {
-        try {
-            // Patreon Creator API - requires OAuth and proper setup
-            // For now, we'll try to scrape public Patreon page data or use a proxy endpoint
-            const patreonUsername = 'SteelCanvasStudio';
-            
-            // Option 1: Try to get public data from Patreon page
-            const publicData = await this.fetchPublicPatreonData(patreonUsername);
-            
-            return publicData;
-        } catch (error) {
-            console.log('Patreon data not available:', error.message);
-            return null;
-        }
-    }
-
-    async fetchPublicPatreonData(username) {
-        try {
-            // Use the backend endpoint that fetches real Patreon data
-            const response = await fetch(`${this.apiBaseUrl}/patreon/public/stats`);
-            
-            if (response.ok) {
-                return await response.json();
-            }
-            
-            // Fallback: Return structure that matches expected Patreon data
-            return {
-                supporters: 0,
-                monthlyRevenue: 0,
-                goals: [],
-                totalPosts: 0,
-                isCreatorAccessTokenActive: false
-            };
-        } catch (error) {
-            console.log('Could not fetch Patreon data:', error.message);
-            return {
-                supporters: 0,
-                monthlyRevenue: 0,
-                goals: [],
-                totalPosts: 0,
-                isCreatorAccessTokenActive: false
-            };
-        }
-    }
 
     generateDashboardData(realData = {}) {
         const now = new Date();
