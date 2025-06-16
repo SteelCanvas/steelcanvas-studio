@@ -144,7 +144,19 @@ class AdminDashboard {
             };
         } catch (error) {
             console.log('Website analytics not available:', error.message);
-            return null;
+            return {
+                totalVisitors: 0,
+                pageViews: 0,
+                bounceRate: 0,
+                avgSessionDuration: 0,
+                bandwidth: 0,
+                requests: 0,
+                uniqueVisitors: 0,
+                countries: [],
+                topPages: [],
+                timeseries: [],
+                configured: false
+            };
         }
     }
 
@@ -213,7 +225,13 @@ class AdminDashboard {
             };
         } catch (error) {
             console.log('Could not fetch Patreon data:', error.message);
-            return null;
+            return {
+                supporters: 0,
+                monthlyRevenue: 0,
+                goals: [],
+                totalPosts: 0,
+                isCreatorAccessTokenActive: false
+            };
         }
     }
 
