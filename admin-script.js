@@ -411,16 +411,101 @@ class AdminDashboard {
         if (this.refreshInterval) {
             clearInterval(this.refreshInterval);
         }
+        if (this.criticalRefreshInterval) {
+            clearInterval(this.criticalRefreshInterval);
+        }
         
         // Initial update
         this.loadDashboardData();
         
-        // Refresh every 2 minutes
+        // Fast refresh for live statistics - every 15 seconds
         this.refreshInterval = setInterval(() => {
             this.loadDashboardData();
-        }, 120000);
+            this.updateLiveIndicators();
+        }, 15000);
         
-        console.log('🔄 Admin polling mode started (2min intervals)');
+        // Ultra-fast refresh for critical metrics - every 5 seconds
+        this.criticalRefreshInterval = setInterval(() => {
+            this.updateCriticalMetrics();
+        }, 5000);
+        
+        console.log('🔄 Admin live polling started (15s full refresh, 5s critical metrics)');
+    }
+    
+    updateLiveIndicators() {
+        // Add live indicator to show data is fresh
+        const indicators = document.querySelectorAll('.live-indicator');
+        indicators.forEach(indicator => {
+            indicator.classList.add('pulse');
+            setTimeout(() => indicator.classList.remove('pulse'), 1000);
+        });
+        
+        // Update timestamp
+        const timestampElements = document.querySelectorAll('.last-updated');
+        timestampElements.forEach(element => {
+            element.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+        });
+    }
+    
+    async updateCriticalMetrics() {
+        try {
+            // Quick fetch of just critical real-time data
+            const response = await fetch(`${this.apiBaseUrl}/public/stats`).catch(() => null);
+            if (response && response.ok) {
+                const data = await response.json();
+                
+                // Update active players count immediately
+                this.updateMetricValue('activePlayersCount', data.gameStats?.activePlayers || 0);
+                
+                // Update total players
+                this.updateMetricValue('totalPlayersCount', data.gameStats?.totalPlayers || 0);
+                
+                // Update revenue if available
+                this.updateMetricValue('currentRevenue', `$${(data.gameStats?.revenue || 0).toLocaleString()}`);
+                
+                // Update Patreon supporters
+                this.updateMetricValue('patreonSupporters', data.patreonStats?.supporters || 0);
+                
+                // Update website visitors
+                this.updateMetricValue('uniqueVisitors', data.websiteStats?.uniqueVisitors || 0);
+                
+                // Update page views
+                this.updateMetricValue('pageViews', data.websiteStats?.pageViews || 0);
+                
+                // Show live status
+                this.showLiveStatus(true);
+            } else {
+                this.showLiveStatus(false);
+            }
+        } catch (error) {
+            console.warn('Critical metrics update failed:', error);
+            this.showLiveStatus(false);
+        }
+    }
+    
+    updateMetricValue(elementId, newValue) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            const oldValue = element.textContent;
+            if (oldValue !== newValue.toString()) {
+                element.textContent = newValue;
+                element.classList.add('value-updated');
+                setTimeout(() => element.classList.remove('value-updated'), 2000);
+            }
+        }
+    }
+    
+    showLiveStatus(isLive) {
+        const statusElements = document.querySelectorAll('.live-status');
+        statusElements.forEach(element => {
+            if (isLive) {
+                element.innerHTML = '🟢 LIVE';
+                element.className = 'live-status live-connected';
+            } else {
+                element.innerHTML = '🔴 OFFLINE';
+                element.className = 'live-status live-disconnected';
+            }
+        });
     }
 
     renderAllTabs() {
