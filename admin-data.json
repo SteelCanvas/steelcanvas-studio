@@ -8,7 +8,83 @@
   "websiteStats": {
     "pageViews": 156,
     "uniqueVisitors": 67,
-    "avgSessionDuration": "2:34"
+    "avgSessionDuration": "2:34",
+    "topPages": [
+      {
+        "page": "/",
+        "views": 45,
+        "uniqueVisitors": 38,
+        "bounceRate": "32%"
+      },
+      {
+        "page": "/games",
+        "views": 34,
+        "uniqueVisitors": 29,
+        "bounceRate": "28%"
+      },
+      {
+        "page": "/about",
+        "views": 28,
+        "uniqueVisitors": 25,
+        "bounceRate": "41%"
+      },
+      {
+        "page": "/pocket-legion",
+        "views": 22,
+        "uniqueVisitors": 18,
+        "bounceRate": "15%"
+      },
+      {
+        "page": "/news",
+        "views": 18,
+        "uniqueVisitors": 16,
+        "bounceRate": "55%"
+      },
+      {
+        "page": "/community",
+        "views": 9,
+        "uniqueVisitors": 8,
+        "bounceRate": "67%"
+      }
+    ],
+    "seoPerformance": [
+      {
+        "keyword": "indie game development",
+        "position": 18,
+        "clicks": 12,
+        "impressions": 847
+      },
+      {
+        "keyword": "steel canvas studio",
+        "position": 3,
+        "clicks": 28,
+        "impressions": 156
+      },
+      {
+        "keyword": "pocket legion game",
+        "position": 12,
+        "clicks": 8,
+        "impressions": 234
+      },
+      {
+        "keyword": "mobile strategy game",
+        "position": 24,
+        "clicks": 5,
+        "impressions": 1203
+      },
+      {
+        "keyword": "brainrot battle",
+        "position": 7,
+        "clicks": 15,
+        "impressions": 89
+      },
+      {
+        "keyword": "indie game studio canada",
+        "position": 31,
+        "clicks": 3,
+        "impressions": 445
+      }
+    ]
   },
   "patreonStats": {
     "supporters": 0,
