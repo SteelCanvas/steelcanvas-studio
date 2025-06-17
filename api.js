@@ -5,10 +5,18 @@
 
 class SteelCanvasAPI {
     constructor() {
-        this.baseUrl = 'http://localhost:8080/api/public';
+        this.baseUrl = 'http://localhost:8081/api/public';
+        this.websocketUrl = 'ws://localhost:8081/ws';
         this.cachePrefix = 'steelcanvas_';
         this.cacheDuration = 5 * 60 * 1000; // 5 minutes
         this.fallbackData = this.getFallbackData();
+        this.websocketConnected = false;
+        this.stompClient = null;
+        this.reconnectAttempts = 0;
+        this.maxReconnectAttempts = 5;
+        this.reconnectDelay = 3000;
+        this.pollingInterval = null;
+        this.useWebSocket = true;
     }
 
     /**
@@ -126,25 +134,18 @@ class SteelCanvasAPI {
     }
 
     /**
-     * Make API request with fallback handling
+     * Make API request with fallback handling - BACKEND DATA ONLY
      */
     async apiRequest(endpoint, fallbackKey) {
-        // Check cache first
-        const cachedData = this.getCachedData(endpoint);
-        if (cachedData) {
-            console.log(`Using cached data for ${endpoint}`);
-            return cachedData;
-        }
-
         try {
-            console.log(`Fetching data from ${this.baseUrl}${endpoint}`);
+            console.log(`🔍 Fetching LIVE data from ${this.baseUrl}${endpoint}`);
             const response = await fetch(`${this.baseUrl}${endpoint}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // Timeout after 5 seconds
-                signal: AbortSignal.timeout(5000)
+                // Timeout after 10 seconds (increased for backend connection)
+                signal: AbortSignal.timeout(10000)
             });
 
             if (!response.ok) {
@@ -155,20 +156,25 @@ class SteelCanvasAPI {
             
             // Cache the successful response
             this.setCachedData(endpoint, data);
-            console.log(`Successfully fetched and cached data for ${endpoint}`);
+            console.log(`✅ Successfully fetched LIVE backend data for ${endpoint}`);
             
             return data;
 
         } catch (error) {
-            console.warn(`API request failed for ${endpoint}:`, error.message);
-            console.log(`Using fallback data for ${endpoint}`);
+            console.error(`❌ Backend connection failed for ${endpoint}:`, error.message);
             
-            // Return fallback data
+            // Check if we have recent cached data from backend
+            const cachedData = this.getCachedData(endpoint);
+            if (cachedData) {
+                console.log(`🔄 Using recent cached backend data for ${endpoint}`);
+                return cachedData;
+            }
+            
+            // Only use fallback data as last resort and warn heavily
+            console.warn(`⚠️ USING MOCK DATA - Backend is unavailable for ${endpoint}`);
+            console.warn(`⚠️ This is fallback data and not real game statistics!`);
+            
             const fallbackData = this.fallbackData[fallbackKey];
-            
-            // Cache fallback data with shorter duration
-            this.setCachedData(endpoint, fallbackData);
-            
             return fallbackData;
         }
     }
@@ -236,121 +242,352 @@ class SteelCanvasAPI {
     }
 
     /**
-     * Update UI elements with live stats
+     * Initialize WebSocket connection with STOMP protocol
+     */
+    initializeWebSocket() {
+        if (!this.useWebSocket) {
+            console.log('WebSocket disabled, using polling mode');
+            this.startPolling();
+            return;
+        }
+
+        try {
+            // Use SockJS for better compatibility
+            const socket = new SockJS(`${this.websocketUrl}`);
+            this.stompClient = Stomp.over(socket);
+            
+            // Disable debug logging
+            this.stompClient.debug = null;
+            
+            const connectHeaders = {};
+            
+            this.stompClient.connect(connectHeaders, 
+                (frame) => {
+                    this.onWebSocketConnect(frame);
+                },
+                (error) => {
+                    this.onWebSocketError(error);
+                }
+            );
+            
+            // Handle connection close
+            socket.onclose = () => {
+                this.onWebSocketDisconnect();
+            };
+            
+        } catch (error) {
+            console.error('Failed to initialize WebSocket:', error);
+            this.fallbackToPolling();
+        }
+    }
+
+    /**
+     * Handle successful WebSocket connection
+     */
+    onWebSocketConnect(frame) {
+        console.log('✅ WebSocket connected successfully');
+        this.websocketConnected = true;
+        this.reconnectAttempts = 0;
+        
+        // Stop polling if it was running
+        if (this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+            this.pollingInterval = null;
+        }
+        
+        // Subscribe to data updates
+        this.subscribeToUpdates();
+        
+        // Request initial data
+        this.requestInitialData();
+    }
+
+    /**
+     * Handle WebSocket connection error
+     */
+    onWebSocketError(error) {
+        console.error('❌ WebSocket connection error:', error);
+        this.websocketConnected = false;
+        this.attemptReconnect();
+    }
+
+    /**
+     * Handle WebSocket disconnection
+     */
+    onWebSocketDisconnect() {
+        console.warn('⚠️ WebSocket disconnected');
+        this.websocketConnected = false;
+        this.attemptReconnect();
+    }
+
+    /**
+     * Attempt to reconnect WebSocket
+     */
+    attemptReconnect() {
+        if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+            console.warn('Max reconnection attempts reached, falling back to polling');
+            this.fallbackToPolling();
+            return;
+        }
+        
+        this.reconnectAttempts++;
+        console.log(`Attempting to reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
+        
+        setTimeout(() => {
+            this.initializeWebSocket();
+        }, this.reconnectDelay * this.reconnectAttempts);
+    }
+
+    /**
+     * Fallback to polling mode when WebSocket fails
+     */
+    fallbackToPolling() {
+        console.log('🔄 Falling back to polling mode');
+        this.useWebSocket = false;
+        this.websocketConnected = false;
+        this.startPolling();
+    }
+
+    /**
+     * Subscribe to WebSocket data updates
+     */
+    subscribeToUpdates() {
+        if (!this.stompClient || !this.websocketConnected) return;
+        
+        // Subscribe to stats updates
+        this.stompClient.subscribe('/topic/stats', (message) => {
+            const data = JSON.parse(message.body);
+            this.handleStatsUpdate(data);
+        });
+        
+        // Subscribe to leaderboard updates
+        this.stompClient.subscribe('/topic/leaderboard', (message) => {
+            const data = JSON.parse(message.body);
+            this.handleLeaderboardUpdate(data);
+        });
+        
+        // Subscribe to activity updates
+        this.stompClient.subscribe('/topic/activity', (message) => {
+            const data = JSON.parse(message.body);
+            this.handleActivityUpdate(data);
+        });
+        
+        console.log('📡 Subscribed to WebSocket updates');
+    }
+
+    /**
+     * Request initial data via WebSocket
+     */
+    requestInitialData() {
+        if (!this.stompClient || !this.websocketConnected) return;
+        
+        this.stompClient.send('/app/stats/request', {}, JSON.stringify({}));
+        this.stompClient.send('/app/leaderboard/request', {}, JSON.stringify({}));
+        this.stompClient.send('/app/activity/request', {}, JSON.stringify({}));
+        
+        console.log('📤 Requested initial data via WebSocket');
+    }
+
+    /**
+     * Handle real-time stats update
+     */
+    handleStatsUpdate(data) {
+        if (data.error) {
+            console.error('Stats update error:', data.error);
+            return;
+        }
+        
+        this.updateStatsDisplay(data);
+        console.log('📊 Stats updated via WebSocket');
+    }
+
+    /**
+     * Handle real-time leaderboard update
+     */
+    handleLeaderboardUpdate(data) {
+        if (data.error) {
+            console.error('Leaderboard update error:', data.error);
+            return;
+        }
+        
+        this.updateLeaderboardDisplay(data);
+        console.log('🏆 Leaderboard updated via WebSocket');
+    }
+
+    /**
+     * Handle real-time activity update
+     */
+    handleActivityUpdate(data) {
+        if (data.error) {
+            console.error('Activity update error:', data.error);
+            return;
+        }
+        
+        this.updateActivityDisplay(data);
+        console.log('🎮 Activity updated via WebSocket');
+    }
+
+    /**
+     * Start polling mode for when WebSocket is unavailable
+     */
+    startPolling() {
+        if (this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+        }
+        
+        // Initial update
+        this.updateAllData();
+        
+        // Set up polling every 30 seconds
+        this.pollingInterval = setInterval(() => {
+            this.updateAllData();
+        }, 30000);
+        
+        console.log('🔄 Polling mode started (30s intervals)');
+    }
+
+    /**
+     * Update all data (for polling mode)
+     */
+    async updateAllData() {
+        await Promise.all([
+            this.updateLiveStats(),
+            this.updateLeaderboard(),
+            this.updateRecentActivity()
+        ]);
+    }
+
+    /**
+     * Update UI elements with live stats (polling mode)
      */
     async updateLiveStats() {
         try {
-            // Update overview stats
             const overview = await this.getOverviewStats();
-            
-            // Update total players
-            const totalPlayersEl = document.getElementById('total-players');
-            if (totalPlayersEl && overview.totalPlayers !== undefined) {
-                totalPlayersEl.textContent = this.formatNumber(overview.totalPlayers);
-            }
-
-            // Update players today
-            const playersTodayEl = document.getElementById('players-today');
-            if (playersTodayEl && overview.playersToday !== undefined) {
-                playersTodayEl.textContent = this.formatNumber(overview.playersToday);
-            }
-
-            // Update sessions today
-            const sessionsTodayEl = document.getElementById('sessions-today');
-            if (sessionsTodayEl && overview.sessionsToday !== undefined) {
-                sessionsTodayEl.textContent = this.formatNumber(overview.sessionsToday);
-            }
-
-            // Update average score
-            const avgScoreEl = document.getElementById('average-score');
-            if (avgScoreEl && overview.averageScore !== undefined) {
-                avgScoreEl.textContent = this.formatNumber(overview.averageScore);
-            }
-
-            // Update high score
-            const highScoreEl = document.getElementById('high-score');
-            if (highScoreEl && overview.highScore !== undefined) {
-                highScoreEl.textContent = this.formatNumber(overview.highScore);
-            }
-
+            this.updateStatsDisplay(overview);
             console.log('Live stats updated successfully');
-
         } catch (error) {
             console.error('Failed to update live stats:', error);
         }
     }
 
     /**
-     * Update leaderboard display
+     * Update stats display with data
+     */
+    updateStatsDisplay(overview) {
+        // Update total players
+        const totalPlayersEl = document.getElementById('total-players');
+        if (totalPlayersEl && overview.totalPlayers !== undefined) {
+            totalPlayersEl.textContent = this.formatNumber(overview.totalPlayers);
+        }
+
+        // Update players today
+        const playersTodayEl = document.getElementById('players-today');
+        if (playersTodayEl && overview.playersToday !== undefined) {
+            playersTodayEl.textContent = this.formatNumber(overview.playersToday);
+        }
+
+        // Update sessions today
+        const sessionsTodayEl = document.getElementById('sessions-today');
+        if (sessionsTodayEl && overview.sessionsToday !== undefined) {
+            sessionsTodayEl.textContent = this.formatNumber(overview.sessionsToday);
+        }
+
+        // Update average score
+        const avgScoreEl = document.getElementById('average-score');
+        if (avgScoreEl && overview.averageScore !== undefined) {
+            avgScoreEl.textContent = this.formatNumber(overview.averageScore);
+        }
+
+        // Update high score
+        const highScoreEl = document.getElementById('high-score');
+        if (highScoreEl && overview.highScore !== undefined) {
+            highScoreEl.textContent = this.formatNumber(overview.highScore);
+        }
+    }
+
+    /**
+     * Update leaderboard display (polling mode)
      */
     async updateLeaderboard() {
         try {
             const leaderboard = await this.getTop10Leaderboard();
-            const leaderboardEl = document.getElementById('leaderboard-list');
-            
-            if (leaderboardEl && Array.isArray(leaderboard)) {
-                leaderboardEl.innerHTML = leaderboard.slice(0, 5).map((entry, index) => `
-                    <div class="leaderboard-entry">
-                        <span class="rank">#${index + 1}</span>
-                        <span class="username">${entry.player?.username || 'Unknown'}</span>
-                        <span class="score">${this.formatNumber(entry.score || 0)}</span>
-                    </div>
-                `).join('');
-                
-                console.log('Leaderboard updated successfully');
-            }
-
+            this.updateLeaderboardDisplay(leaderboard);
+            console.log('Leaderboard updated successfully');
         } catch (error) {
             console.error('Failed to update leaderboard:', error);
         }
     }
 
     /**
-     * Update recent activity display
+     * Update leaderboard display with data
+     */
+    updateLeaderboardDisplay(leaderboard) {
+        const leaderboardEl = document.getElementById('leaderboard-list');
+        
+        if (leaderboardEl && Array.isArray(leaderboard)) {
+            leaderboardEl.innerHTML = leaderboard.slice(0, 5).map((entry, index) => `
+                <div class="leaderboard-entry">
+                    <span class="rank">#${index + 1}</span>
+                    <span class="username">${entry.player?.username || 'Unknown'}</span>
+                    <span class="score">${this.formatNumber(entry.score || 0)}</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    /**
+     * Update recent activity display (polling mode)
      */
     async updateRecentActivity() {
         try {
             const activity = await this.getRecentActivity();
-            const activityEl = document.getElementById('recent-activity');
-            
-            if (activityEl && Array.isArray(activity)) {
-                activityEl.innerHTML = activity.slice(0, 3).map(entry => `
-                    <div class="activity-entry">
-                        <span class="username">${entry.player?.username || 'Player'}</span>
-                        <span class="score">scored ${this.formatNumber(entry.score || 0)}</span>
-                        <span class="time">${this.formatDate(entry.createdAt)}</span>
-                    </div>
-                `).join('');
-                
-                console.log('Recent activity updated successfully');
-            }
-
+            this.updateActivityDisplay(activity);
+            console.log('Recent activity updated successfully');
         } catch (error) {
             console.error('Failed to update recent activity:', error);
         }
     }
 
     /**
-     * Initialize and start periodic updates
+     * Update activity display with data
+     */
+    updateActivityDisplay(activity) {
+        const activityEl = document.getElementById('recent-activity');
+        
+        if (activityEl && Array.isArray(activity)) {
+            activityEl.innerHTML = activity.slice(0, 3).map(entry => `
+                <div class="activity-entry">
+                    <span class="username">${entry.player?.username || 'Player'}</span>
+                    <span class="score">scored ${this.formatNumber(entry.score || 0)}</span>
+                    <span class="time">${this.formatDate(entry.createdAt)}</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    /**
+     * Initialize and start real-time or periodic updates
      */
     async initialize() {
         console.log('Initializing Steel Canvas API client...');
         
-        // Initial update
-        await Promise.all([
-            this.updateLiveStats(),
-            this.updateLeaderboard(),
-            this.updateRecentActivity()
-        ]);
-
-        // Set up periodic updates every 30 seconds
-        setInterval(async () => {
-            await Promise.all([
-                this.updateLiveStats(),
-                this.updateLeaderboard(),
-                this.updateRecentActivity()
-            ]);
-        }, 30000);
+        // Check if WebSocket libraries are available
+        if (typeof SockJS === 'undefined' || typeof Stomp === 'undefined') {
+            console.warn('WebSocket libraries not available, falling back to polling');
+            this.useWebSocket = false;
+        }
+        
+        // Try WebSocket first, fallback to polling on failure
+        if (this.useWebSocket) {
+            try {
+                this.initializeWebSocket();
+            } catch (error) {
+                console.error('WebSocket initialization failed:', error);
+                this.fallbackToPolling();
+            }
+        } else {
+            this.startPolling();
+        }
 
         console.log('Steel Canvas API client initialized successfully');
     }

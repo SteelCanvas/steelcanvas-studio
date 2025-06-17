@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test - Steel Canvas Studio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .status.connected { background-color: #2d5a2d; }
+        .status.disconnected { background-color: #5a2d2d; }
+        .status.connecting { background-color: #5a5a2d; }
+        .data-display {
+            background-color: #2d2d2d;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+        }
+        .button {
+            background-color: #C0C0C0;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #ff6b47;
+        }
+        pre {
+            background-color: #000;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 WebSocket Real-Time Updates Test</h1>
+        
+        <div id="connectionStatus" class="status disconnected">
+            ❌ Not Connected
+        </div>
+        
+        <div class="controls">
+            <button class="button" onclick="testAPI.connect()">Connect WebSocket</button>
+            <button class="button" onclick="testAPI.disconnect()">Disconnect</button>
+            <button class="button" onclick="testAPI.requestStats()">Request Stats</button>
+            <button class="button" onclick="testAPI.requestLeaderboard()">Request Leaderboard</button>
+            <button class="button" onclick="testAPI.requestActivity()">Request Activity</button>
+            <button class="button" onclick="testAPI.requestAdmin()">Request Admin Data</button>
+        </div>
+        
+        <div class="data-display">
+            <h3>📊 Live Stats</h3>
+            <pre id="statsData">No data received yet...</pre>
+        </div>
+        
+        <div class="data-display">
+            <h3>🏆 Live Leaderboard</h3>
+            <pre id="leaderboardData">No data received yet...</pre>
+        </div>
+        
+        <div class="data-display">
+            <h3>🎮 Live Activity</h3>
+            <pre id="activityData">No data received yet...</pre>
+        </div>
+        
+        <div class="data-display">
+            <h3>⚙️ Admin Data</h3>
+            <pre id="adminData">No data received yet...</pre>
+        </div>
+        
+        <div class="data-display">
+            <h3>📝 Connection Log</h3>
+            <pre id="logData"></pre>
+        </div>
+    </div>
+
+    <!-- WebSocket dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    
+    <script>
+        class WebSocketTest {
+            constructor() {
+                this.websocketUrl = 'ws://localhost:8080/ws';
+                this.stompClient = null;
+                this.connected = false;
+                this.logElement = document.getElementById('logData');
+                this.statusElement = document.getElementById('connectionStatus');
+                
+                this.log('WebSocket test initialized');
+            }
+            
+            log(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                const logEntry = `[${timestamp}] ${message}\n`;
+                this.logElement.textContent += logEntry;
+                this.logElement.scrollTop = this.logElement.scrollHeight;
+                console.log(message);
+            }
+            
+            updateStatus(status, message) {
+                this.statusElement.className = `status ${status}`;
+                this.statusElement.textContent = message;
+            }
+            
+            connect() {
+                if (this.connected) {
+                    this.log('⚠️ Already connected');
+                    return;
+                }
+                
+                try {
+                    this.log('🔌 Attempting to connect to WebSocket...');
+                    this.updateStatus('connecting', '🔄 Connecting...');
+                    
+                    const socket = new SockJS(this.websocketUrl);
+                    this.stompClient = Stomp.over(socket);
+                    
+                    // Disable debug logging
+                    this.stompClient.debug = null;
+                    
+                    this.stompClient.connect({}, 
+                        (frame) => {
+                            this.onConnect(frame);
+                        },
+                        (error) => {
+                            this.onError(error);
+                        }
+                    );
+                    
+                    socket.onclose = () => {
+                        this.onDisconnect();
+                    };
+                    
+                } catch (error) {
+                    this.log(`❌ Connection failed: ${error.message}`);
+                    this.updateStatus('disconnected', '❌ Connection Failed');
+                }
+            }
+            
+            onConnect(frame) {
+                this.connected = true;
+                this.log('✅ WebSocket connected successfully');
+                this.updateStatus('connected', '✅ Connected');
+                
+                // Subscribe to all topics
+                this.subscribeToTopics();
+            }
+            
+            onError(error) {
+                this.connected = false;
+                this.log(`❌ WebSocket error: ${error}`);
+                this.updateStatus('disconnected', '❌ Connection Error');
+            }
+            
+            onDisconnect() {
+                this.connected = false;
+                this.log('⚠️ WebSocket disconnected');
+                this.updateStatus('disconnected', '❌ Disconnected');
+            }
+            
+            subscribeToTopics() {
+                if (!this.stompClient || !this.connected) return;
+                
+                // Subscribe to stats updates
+                this.stompClient.subscribe('/topic/stats', (message) => {
+                    const data = JSON.parse(message.body);
+                    this.log('📊 Received stats update');
+                    document.getElementById('statsData').textContent = JSON.stringify(data, null, 2);
+                });
+                
+                // Subscribe to leaderboard updates
+                this.stompClient.subscribe('/topic/leaderboard', (message) => {
+                    const data = JSON.parse(message.body);
+                    this.log('🏆 Received leaderboard update');
+                    document.getElementById('leaderboardData').textContent = JSON.stringify(data, null, 2);
+                });
+                
+                // Subscribe to activity updates
+                this.stompClient.subscribe('/topic/activity', (message) => {
+                    const data = JSON.parse(message.body);
+                    this.log('🎮 Received activity update');
+                    document.getElementById('activityData').textContent = JSON.stringify(data, null, 2);
+                });
+                
+                // Subscribe to admin updates
+                this.stompClient.subscribe('/topic/admin', (message) => {
+                    const data = JSON.parse(message.body);
+                    this.log('⚙️ Received admin update');
+                    document.getElementById('adminData').textContent = JSON.stringify(data, null, 2);
+                });
+                
+                this.log('📡 Subscribed to all WebSocket topics');
+            }
+            
+            disconnect() {
+                if (this.stompClient && this.connected) {
+                    this.stompClient.disconnect(() => {
+                        this.log('👋 Disconnected from WebSocket');
+                        this.updateStatus('disconnected', '❌ Disconnected');
+                    });
+                    this.connected = false;
+                } else {
+                    this.log('⚠️ Not connected');
+                }
+            }
+            
+            requestStats() {
+                if (!this.stompClient || !this.connected) {
+                    this.log('❌ Not connected - cannot request stats');
+                    return;
+                }
+                
+                this.stompClient.send('/app/stats/request', {}, JSON.stringify({}));
+                this.log('📤 Requested stats data');
+            }
+            
+            requestLeaderboard() {
+                if (!this.stompClient || !this.connected) {
+                    this.log('❌ Not connected - cannot request leaderboard');
+                    return;
+                }
+                
+                this.stompClient.send('/app/leaderboard/request', {}, JSON.stringify({}));
+                this.log('📤 Requested leaderboard data');
+            }
+            
+            requestActivity() {
+                if (!this.stompClient || !this.connected) {
+                    this.log('❌ Not connected - cannot request activity');
+                    return;
+                }
+                
+                this.stompClient.send('/app/activity/request', {}, JSON.stringify({}));
+                this.log('📤 Requested activity data');
+            }
+            
+            requestAdmin() {
+                if (!this.stompClient || !this.connected) {
+                    this.log('❌ Not connected - cannot request admin data');
+                    return;
+                }
+                
+                this.stompClient.send('/app/admin/request', {}, JSON.stringify({}));
+                this.log('📤 Requested admin data');
+            }
+        }
+        
+        // Create global test instance
+        const testAPI = new WebSocketTest();
+        
+        // Auto-connect on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testAPI.connect();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
