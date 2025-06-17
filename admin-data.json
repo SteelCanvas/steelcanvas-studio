@@ -1,0 +1,43 @@
+{
+  "lastUpdated" : "2025-06-16T21:18:27.548779079",
+  "patreonStats" : {
+    "totalPosts" : 0,
+    "monthlyRevenue" : 0.0,
+    "isCreatorAccessTokenActive" : false,
+    "supporters" : 0,
+    "goals" : [ ]
+  },
+  "collectionTimestamp" : 1750130307548,
+  "exportedAt" : "2025-06-16T21:18:27.548866635",
+  "exportSource" : "backend_data_collection",
+  "websiteStats" : {
+    "configured" : false,
+    "visitors" : 0,
+    "lastUpdated" : "2025-06-16T21:18:27.541414933",
+    "pageViews" : 0,
+    "bandwidth" : 0,
+    "success" : false,
+    "requests" : 0,
+    "error" : "Cloudflare API not available",
+    "uniqueVisitors" : 0
+  },
+  "dataSource" : "live_apis",
+  "gameStats" : {
+    "recentPlayers" : 3,
+    "playersToday" : 2,
+    "totalPlayers" : 4,
+    "topScore" : 8750,
+    "peakConcurrent" : 3,
+    "platformDistribution" : {
+      "desktop" : 1,
+      "mobile" : 2
+    },
+    "totalPlayTime" : 65,
+    "totalGamesPlayed" : 3,
+    "totalScore" : 17020,
+    "averageScore" : 5673.333333333333,
+    "activeSessions" : 0,
+    "totalBattlesWon" : 3,
+    "sessionsToday" : 3
+  }
+}

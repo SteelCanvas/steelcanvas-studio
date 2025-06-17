@@ -1,1 +1,9 @@
-{"totalPosts":0,"monthlyRevenue":0.0,"isCreatorAccessTokenActive":false,"supporters":0,"goals":[]}
+{
+  "totalPosts" : 0,
+  "monthlyRevenue" : 0.0,
+  "isCreatorAccessTokenActive" : false,
+  "supporters" : 0,
+  "goals" : [ ],
+  "exportedAt" : "2025-06-16T21:18:27.550239686",
+  "exportSource" : "backend_data_collection"
+}

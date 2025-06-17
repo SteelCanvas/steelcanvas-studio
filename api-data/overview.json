@@ -1,1 +1,20 @@
-{"playersToday":0,"highScore":0,"totalPlayers":0,"sessionsToday":0,"averageScore":0}
+{
+  "recentPlayers" : 3,
+  "playersToday" : 2,
+  "totalPlayers" : 4,
+  "topScore" : 8750,
+  "peakConcurrent" : 3,
+  "platformDistribution" : {
+    "desktop" : 1,
+    "mobile" : 2
+  },
+  "totalPlayTime" : 65,
+  "exportSource" : "backend_data_collection",
+  "totalGamesPlayed" : 3,
+  "totalScore" : 17020,
+  "averageScore" : 5673.333333333333,
+  "activeSessions" : 0,
+  "totalBattlesWon" : 3,
+  "exportedAt" : "2025-06-16T21:18:27.549520160",
+  "sessionsToday" : 3
+}
