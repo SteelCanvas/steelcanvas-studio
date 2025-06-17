@@ -21,10 +21,17 @@ class AdminDashboard {
         // LOCAL: Use localhost for testing API endpoints when backend is accessible
         // AWS: Change to production backend URL (e.g., https://api.steelcanvas.studio)
         this.apiBaseUrl = 'http://localhost:8081/api';
+        this.websocketUrl = 'ws://localhost:8081/ws';
         this.charts = {};
         this.dashboardData = null;
         this.refreshInterval = null;
         this.currentTab = 'website';
+        this.websocketConnected = false;
+        this.stompClient = null;
+        this.reconnectAttempts = 0;
+        this.maxReconnectAttempts = 5;
+        this.reconnectDelay = 3000;
+        this.useWebSocket = true;
         
         this.init();
     }
@@ -270,10 +277,150 @@ class AdminDashboard {
     }
 
     startAutoRefresh() {
+        // Check if WebSocket libraries are available
+        if (typeof SockJS === 'undefined' || typeof Stomp === 'undefined') {
+            console.warn('WebSocket libraries not available for admin dashboard, falling back to polling');
+            this.useWebSocket = false;
+        }
+        
+        // Try WebSocket first, fallback to polling on failure
+        if (this.useWebSocket) {
+            try {
+                this.initializeWebSocket();
+            } catch (error) {
+                console.error('Admin WebSocket initialization failed:', error);
+                this.fallbackToPolling();
+            }
+        } else {
+            this.startPolling();
+        }
+    }
+
+    initializeWebSocket() {
+        if (!this.useWebSocket) {
+            console.log('Admin WebSocket disabled, using polling mode');
+            this.startPolling();
+            return;
+        }
+
+        try {
+            const socket = new SockJS(`${this.websocketUrl}`);
+            this.stompClient = Stomp.over(socket);
+            
+            this.stompClient.debug = null;
+            
+            const connectHeaders = {};
+            
+            this.stompClient.connect(connectHeaders, 
+                (frame) => {
+                    this.onWebSocketConnect(frame);
+                },
+                (error) => {
+                    this.onWebSocketError(error);
+                }
+            );
+            
+            socket.onclose = () => {
+                this.onWebSocketDisconnect();
+            };
+            
+        } catch (error) {
+            console.error('Failed to initialize admin WebSocket:', error);
+            this.fallbackToPolling();
+        }
+    }
+
+    onWebSocketConnect(frame) {
+        console.log('✅ Admin WebSocket connected successfully');
+        this.websocketConnected = true;
+        this.reconnectAttempts = 0;
+        
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+            this.refreshInterval = null;
+        }
+        
+        this.subscribeToAdminUpdates();
+        this.requestAdminData();
+    }
+
+    onWebSocketError(error) {
+        console.error('❌ Admin WebSocket connection error:', error);
+        this.websocketConnected = false;
+        this.attemptReconnect();
+    }
+
+    onWebSocketDisconnect() {
+        console.warn('⚠️ Admin WebSocket disconnected');
+        this.websocketConnected = false;
+        this.attemptReconnect();
+    }
+
+    attemptReconnect() {
+        if (this.reconnectAttempts >= this.maxReconnectAttempts) {
+            console.warn('Max admin reconnection attempts reached, falling back to polling');
+            this.fallbackToPolling();
+            return;
+        }
+        
+        this.reconnectAttempts++;
+        console.log(`Attempting admin reconnect (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`);
+        
+        setTimeout(() => {
+            this.initializeWebSocket();
+        }, this.reconnectDelay * this.reconnectAttempts);
+    }
+
+    fallbackToPolling() {
+        console.log('🔄 Admin falling back to polling mode');
+        this.useWebSocket = false;
+        this.websocketConnected = false;
+        this.startPolling();
+    }
+
+    subscribeToAdminUpdates() {
+        if (!this.stompClient || !this.websocketConnected) return;
+        
+        this.stompClient.subscribe('/topic/admin', (message) => {
+            const data = JSON.parse(message.body);
+            this.handleAdminUpdate(data);
+        });
+        
+        console.log('📡 Subscribed to admin WebSocket updates');
+    }
+
+    requestAdminData() {
+        if (!this.stompClient || !this.websocketConnected) return;
+        
+        this.stompClient.send('/app/admin/request', {}, JSON.stringify({}));
+        console.log('📤 Requested admin data via WebSocket');
+    }
+
+    handleAdminUpdate(data) {
+        if (data.error) {
+            console.error('Admin update error:', data.error);
+            return;
+        }
+        
+        console.log('📊 Admin data updated via WebSocket');
+        this.dashboardData = this.enrichDashboardData(data);
+        this.renderAllTabs();
+    }
+
+    startPolling() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+        }
+        
+        // Initial update
+        this.loadDashboardData();
+        
         // Refresh every 2 minutes
         this.refreshInterval = setInterval(() => {
             this.loadDashboardData();
         }, 120000);
+        
+        console.log('🔄 Admin polling mode started (2min intervals)');
     }
 
     renderAllTabs() {
@@ -488,7 +635,11 @@ class AdminDashboard {
     // Website Charts
     renderWebsiteTrafficChart() {
         const ctx = document.getElementById('websiteTrafficChart');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('websiteTrafficChart canvas not found, retrying...');
+            setTimeout(() => this.renderWebsiteTrafficChart(), 200);
+            return;
+        }
 
         if (this.charts.websiteTraffic) {
             this.charts.websiteTraffic.destroy();
@@ -514,7 +665,11 @@ class AdminDashboard {
 
     renderPageViewsChart() {
         const ctx = document.getElementById('pageViewsChart');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('pageViewsChart canvas not found, retrying...');
+            setTimeout(() => this.renderPageViewsChart(), 200);
+            return;
+        }
 
         if (this.charts.pageViews) {
             this.charts.pageViews.destroy();
@@ -586,7 +741,11 @@ class AdminDashboard {
     // Game Charts
     renderDailyPlayersChart() {
         const ctx = document.getElementById('dailyPlayersChart');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('dailyPlayersChart canvas not found, retrying...');
+            setTimeout(() => this.renderDailyPlayersChart(), 200);
+            return;
+        }
 
         if (this.charts.dailyPlayers) {
             this.charts.dailyPlayers.destroy();
@@ -774,7 +933,11 @@ class AdminDashboard {
     // Finance Charts
     renderRevenueTrendChart() {
         const ctx = document.getElementById('revenueTrendChart');
-        if (!ctx) return;
+        if (!ctx) {
+            console.warn('revenueTrendChart canvas not found, retrying...');
+            setTimeout(() => this.renderRevenueTrendChart(), 200);
+            return;
+        }
 
         if (this.charts.revenueTrend) {
             this.charts.revenueTrend.destroy();
@@ -1461,6 +1624,52 @@ function exportToExcel() {
     
     // Save file
     XLSX.writeFile(wb, 'steel-canvas-analytics.xlsx');
+}
+
+// Tab switching functionality
+function switchTab(event, tabName) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Show selected tab content
+    const selectedTab = document.getElementById(tabName);
+    if (selectedTab) {
+        selectedTab.classList.add('active');
+    }
+    
+    // Add active class to clicked button
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+    
+    // Update current tab in dashboard and render charts for the new tab
+    if (window.dashboard) {
+        window.dashboard.currentTab = tabName;
+        
+        // Render charts for the specific tab with a small delay to ensure DOM is ready
+        setTimeout(() => {
+            switch(tabName) {
+                case 'website':
+                    window.dashboard.renderWebsiteCharts();
+                    break;
+                case 'game':
+                    window.dashboard.renderGameCharts();
+                    break;
+                case 'finance':
+                    window.dashboard.renderFinanceCharts();
+                    break;
+            }
+        }, 100);
+    }
 }
 
 // Initialize dashboard when page loads
