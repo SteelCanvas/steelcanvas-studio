@@ -461,6 +461,201 @@
             -webkit-background-clip: text;
         }
 
+        /* Chart Styles */
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .chart-header h3 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .chart-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .chart-status.live {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .chart-status.local {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .chart-status.pre-launch {
+            background: var(--text-muted);
+            color: white;
+        }
+
+        .chart-status.no-revenue {
+            background: var(--border-light);
+            color: var(--text-secondary);
+        }
+
+        .chart-bar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chart-bar {
+            position: relative;
+            background: var(--card-bg-solid);
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .bar-fill {
+            height: 8px;
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+            border-radius: 4px;
+            transition: width 0.8s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .bar-label {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Table Styles */
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .table-header h3 {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .table-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: var(--success-color);
+            color: white;
+        }
+
+        .table-content table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg-solid);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-content th {
+            background: var(--secondary-color);
+            color: var(--text-primary);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .table-content td {
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+            font-size: 0.9rem;
+        }
+
+        .table-content tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-content tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .badge-system {
+            background: var(--primary-color);
+            color: var(--background-dark);
+        }
+
+        .badge-analytics {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .badge-website {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .status-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-info {
+            background: var(--primary-color);
+            color: var(--background-dark);
+        }
+
+        .status-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .status-online {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-offline {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .status-no-data {
+            background: var(--text-muted);
+            color: white;
+        }
+
+        .status-not-configured {
+            background: var(--warning-color);
+            color: white;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .dashboard-header {
@@ -491,6 +686,17 @@
 
             .chart-container {
                 height: 250px;
+            }
+
+            .chart-header,
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .table-content {
+                overflow-x: auto;
             }
         }
     </style>
@@ -784,6 +990,9 @@
         </main>
     </div>
 
+    <!-- WebSocket dependencies for real-time updates -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="admin-script-unified.js?v=20250617184000"></script>
     <script>
         // Force refresh admin script cache
