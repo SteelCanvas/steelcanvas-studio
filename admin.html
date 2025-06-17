@@ -755,9 +755,8 @@
                 <!-- Website Charts -->
                 <section class="charts-grid">
                     <div class="chart-card">
-                        <h3 class="chart-title">Website Traffic</h3>
-                        <div class="chart-container">
-                            <canvas id="websiteTrafficChart"></canvas>
+                        <div id="visitorChart" class="chart-container">
+                            <!-- Will be populated by JavaScript -->
                         </div>
                     </div>
 
@@ -785,6 +784,18 @@
 
                 <!-- Website Tables -->
                 <section class="data-tables">
+                    <div class="table-card">
+                        <div id="recentActivityTable">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="table-card">
+                        <div id="systemStatusTable">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+
                     <div class="table-card">
                         <h3 class="table-title">Top Pages</h3>
                         <table class="data-table" id="topPagesTable">
@@ -832,6 +843,12 @@
 
                 <!-- Game Charts -->
                 <section class="charts-grid">
+                    <div class="chart-card">
+                        <div id="gameChart" class="chart-container">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+
                     <div class="chart-card">
                         <h3 class="chart-title">Daily Active Players</h3>
                         <div class="chart-container">
@@ -907,6 +924,12 @@
 
                 <!-- Finance Charts -->
                 <section class="charts-grid">
+                    <div class="chart-card">
+                        <div id="revenueChart" class="chart-container">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+
                     <div class="chart-card">
                         <h3 class="chart-title">Revenue Trend</h3>
                         <div class="chart-container">
@@ -993,7 +1016,7 @@
     <!-- WebSocket dependencies for real-time updates -->
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
-    <script src="admin-script-unified.js?v=20250617185000"></script>
+    <script src="admin-script-unified.js?v=20250617190000"></script>
     <script>
         // Force refresh admin script cache
         console.log('=== ADMIN DASHBOARD LOADED - UNIFIED FILE VERSION ===');
