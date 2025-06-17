@@ -1,5 +1,8 @@
-// Admin Dashboard JavaScript
-//
+// Admin Dashboard JavaScript - NEW VERSION USING BACKEND APIs ONLY
+// Version: 20250617183000
+// NO FILE FALLBACK - BACKEND ONLY
+console.log('🚀 NEW ADMIN SCRIPT LOADED - BACKEND API ONLY');
+
 // DEPLOYMENT CONFIGURATION:
 // 
 // LOCAL DEVELOPMENT: Uses static JSON files (current setup)
@@ -82,61 +85,97 @@ class AdminDashboard {
 
     async loadDashboardData() {
         try {
-            console.log('Loading dashboard data...');
+            console.log('Loading dashboard data from backend APIs...');
             
-            // LOCAL DEVELOPMENT: Use static JSON files exported by backend
-            // Backend writes data to these files every 5 minutes
-            const [overviewData, cloudflareData, patreonData] = await Promise.all([
-                fetch('api-data/overview.json').then(r => r.ok ? r.json() : null).catch(() => null),
-                fetch('api-data/cloudflare.json').then(r => r.ok ? r.json() : null).catch(() => null),
-                fetch('api-data/patreon.json').then(r => r.ok ? r.json() : null).catch(() => null)
+            // Use backend API endpoints directly - no more file-based approach
+            const [overviewResponse, cloudflareResponse, patreonResponse] = await Promise.all([
+                fetch(`${this.apiBaseUrl}/public/stats`).catch(() => null),
+                fetch(`${this.apiBaseUrl}/public/cloudflare/analytics?days=30`).catch(() => null),
+                fetch(`${this.apiBaseUrl}/patreon/public/stats`).catch(() => null)
             ]);
             
-            // AWS DEPLOYMENT: Uncomment below for direct backend API access when deployed
-            // Available API endpoints:
-            // - GET /api/public/stats/overview - Game statistics (players, scores, sessions)
-            // - GET /api/public/cloudflare/analytics?days=30 - Website analytics from Cloudflare
-            // - GET /api/patreon/public/stats - Patreon supporter and revenue data
-            // - GET /api/public/leaderboard/top10 - Top 10 player leaderboard
-            // - GET /api/public/activity/recent - Recent game activity
-            //
-            // const [overviewResponse, cloudflareResponse, patreonResponse] = await Promise.all([
-            //     fetch(`${this.apiBaseUrl}/public/stats/overview`).catch(() => null),
-            //     fetch(`${this.apiBaseUrl}/public/cloudflare/analytics?days=30`).catch(() => null),
-            //     fetch(`${this.apiBaseUrl}/patreon/public/stats`).catch(() => null)
-            // ]);
-            // 
-            // let overviewData = null, cloudflareData = null, patreonData = null;
-            // if (overviewResponse?.ok) overviewData = await overviewResponse.json();
-            // if (cloudflareResponse?.ok) cloudflareData = await cloudflareResponse.json();
-            // if (patreonResponse?.ok) patreonData = await patreonResponse.json();
+            let realData = { errors: [] };
             
-            let realData = {};
-            
-            if (overviewData) {
-                realData.overview = overviewData;
-                console.log('Overview data loaded from file:', realData.overview);
+            // Handle game statistics
+            if (overviewResponse?.ok) {
+                realData.overview = await overviewResponse.json();
+                console.log('Overview data loaded from backend:', realData.overview);
+            } else {
+                console.error('Failed to load game statistics from backend');
+                realData.errors.push('Game statistics unavailable - Backend connection failed');
             }
             
-            if (cloudflareData) {
-                realData.website = cloudflareData;
-                console.log('Cloudflare data loaded from file:', realData.website);
+            // Handle Cloudflare analytics
+            if (cloudflareResponse?.ok) {
+                realData.website = await cloudflareResponse.json();
+                console.log('Cloudflare data loaded from backend:', realData.website);
+            } else {
+                console.error('Failed to load website analytics from backend');
+                realData.errors.push('Website analytics unavailable - Backend connection failed');
             }
             
-            if (patreonData) {
-                realData.patreon = patreonData;
-                console.log('Patreon data loaded from file:', realData.patreon);
+            // Handle Patreon data
+            if (patreonResponse?.ok) {
+                realData.patreon = await patreonResponse.json();
+                console.log('Patreon data loaded from backend:', realData.patreon);
+            } else {
+                console.error('Failed to load Patreon data from backend');
+                realData.errors.push('Patreon data unavailable - Backend connection failed');
+            }
+            
+            // Show error messages if any APIs failed
+            if (realData.errors.length > 0) {
+                this.showErrorMessages(realData.errors);
+            } else {
+                this.hideErrorMessages();
             }
             
             // Use real data where available
             this.dashboardData = this.generateDashboardData(realData);
             
         } catch (error) {
-            console.log('Error loading data, using fallback values:', error.message);
-            this.dashboardData = this.generateDashboardData({});
+            console.error('Critical error loading data:', error.message);
+            this.showErrorMessages(['Backend server is not responding - All data unavailable']);
+            this.dashboardData = this.generateDashboardData({ errors: ['Backend server offline'] });
         }
 
         this.renderAllTabs();
+    }
+
+    showErrorMessages(errors) {
+        let errorContainer = document.getElementById('errorContainer');
+        if (!errorContainer) {
+            errorContainer = document.createElement('div');
+            errorContainer.id = 'errorContainer';
+            errorContainer.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #ff4444;
+                color: white;
+                padding: 15px;
+                border-radius: 5px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                z-index: 1000;
+                max-width: 400px;
+                font-family: 'Segoe UI', sans-serif;
+            `;
+            document.body.appendChild(errorContainer);
+        }
+        
+        errorContainer.innerHTML = `
+            <div style="font-weight: bold; margin-bottom: 10px;">⚠️ Backend Connection Issues</div>
+            ${errors.map(error => `<div style="margin: 5px 0;">• ${error}</div>`).join('')}
+            <div style="margin-top: 10px; font-size: 12px; opacity: 0.9;">Data shown may be outdated or unavailable.</div>
+        `;
+        errorContainer.style.display = 'block';
+    }
+
+    hideErrorMessages() {
+        const errorContainer = document.getElementById('errorContainer');
+        if (errorContainer) {
+            errorContainer.style.display = 'none';
+        }
     }
 
 
@@ -184,7 +223,7 @@ class AdminDashboard {
         return {
             website: {
                 // Use Cloudflare data if configured, otherwise use local tracking
-                totalVisitors: isCloudflareConfigured ? (realData.website?.totalVisitors || 0) : localData.visitors,
+                totalVisitors: isCloudflareConfigured ? (realData.website?.visitors || 0) : localData.visitors,
                 pageViews: isCloudflareConfigured ? (realData.website?.pageViews || 0) : localData.pageViews,
                 bounceRate: realData.website?.bounceRate || 0,
                 avgSessionDuration: realData.website?.avgSessionDuration || 0,
@@ -202,17 +241,17 @@ class AdminDashboard {
             },
             analytics: {
                 overview: {
-                    // Use real data from backend, default to 0 if not available
-                    totalPlayers: realData.overview?.totalPlayers || 0,
-                    newPlayers: realData.overview?.playersToday || 0,
-                    totalSessions: realData.overview?.sessionsToday || 0,
-                    activeSessions: 0, // This would need real-time session tracking
+                    // Use real data from backend, show unavailable if backend fails
+                    totalPlayers: realData.overview?.totalPlayers ?? 'N/A',
+                    newPlayers: realData.overview?.recentPlayers ?? 'N/A',
+                    totalSessions: realData.overview?.totalGamesPlayed ?? 'N/A',
+                    activeSessions: realData.overview?.activeSessions ?? 'N/A',
                     averageSessionLength: 0, // This would need session duration calculation
                     totalRevenue: 0, // This would need payment integration
                     arpu: 0, // This would be calculated from revenue/players
-                    dau: realData.overview?.playersToday || 0,
-                    averageScore: realData.overview?.averageScore || 0,
-                    highestScore: realData.overview?.highScore || 0
+                    dau: realData.overview?.recentPlayers ?? 'N/A',
+                    averageScore: realData.overview?.averageScore ?? 'N/A',
+                    highestScore: realData.overview?.totalScore ?? 'N/A'
                 }
             },
             finance: {
@@ -312,43 +351,43 @@ class AdminDashboard {
 
         const analytics = this.dashboardData.analytics.overview;
         
-        const hasGameData = analytics.totalPlayers > 0 || analytics.dau > 0 || analytics.averageScore > 0;
+        const hasGameData = analytics.totalPlayers !== 'N/A' && (analytics.totalPlayers > 0 || analytics.dau > 0 || analytics.averageScore > 0);
         
         const metrics = [
             {
                 label: 'Total Players',
-                value: analytics.totalPlayers.toLocaleString(),
-                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                value: analytics.totalPlayers === 'N/A' ? 'N/A' : analytics.totalPlayers.toLocaleString(),
+                change: hasGameData ? 'Real Data' : (analytics.totalPlayers === 'N/A' ? 'Backend Error' : 'Pre-Launch'),
                 positive: hasGameData
             },
             {
                 label: 'Active Sessions',
-                value: analytics.activeSessions,
-                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                value: analytics.activeSessions === 'N/A' ? 'N/A' : analytics.activeSessions,
+                change: hasGameData ? 'Real Data' : (analytics.activeSessions === 'N/A' ? 'Backend Error' : 'Pre-Launch'),
                 positive: hasGameData
             },
             {
-                label: 'Daily Active Users',
-                value: analytics.dau.toLocaleString(),
-                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                label: 'Recent Players',
+                value: analytics.dau === 'N/A' ? 'N/A' : analytics.dau.toLocaleString(),
+                change: hasGameData ? 'Real Data' : (analytics.dau === 'N/A' ? 'Backend Error' : 'Pre-Launch'),
                 positive: hasGameData
             },
             {
                 label: 'Average Score',
-                value: analytics.averageScore.toLocaleString(),
-                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                value: analytics.averageScore === 'N/A' ? 'N/A' : Math.round(analytics.averageScore).toLocaleString(),
+                change: hasGameData ? 'Real Data' : (analytics.averageScore === 'N/A' ? 'Backend Error' : 'Pre-Launch'),
                 positive: hasGameData
             },
             {
-                label: 'Highest Score',
-                value: analytics.highestScore.toLocaleString(),
-                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                label: 'Total Score',
+                value: analytics.highestScore === 'N/A' ? 'N/A' : analytics.highestScore.toLocaleString(),
+                change: hasGameData ? 'Real Data' : (analytics.highestScore === 'N/A' ? 'Backend Error' : 'Pre-Launch'),
                 positive: hasGameData
             },
             {
                 label: 'Total Sessions',
-                value: analytics.totalSessions.toLocaleString(),
-                change: hasGameData ? 'Real Data' : 'Pre-Launch',
+                value: analytics.totalSessions === 'N/A' ? 'N/A' : analytics.totalSessions.toLocaleString(),
+                change: hasGameData ? 'Real Data' : (analytics.totalSessions === 'N/A' ? 'Backend Error' : 'Pre-Launch'),
                 positive: hasGameData
             }
         ];

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Steel Canvas Studio</title>
     <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="icon" href="favicon.png" type="image/png">
     
     <!-- Chart.js for analytics visualizations -->
@@ -781,6 +784,13 @@
         </main>
     </div>
 
-    <script src="admin-script.js?v=2025061609"></script>
+    <script src="admin-script.js?v=20250617183100"></script>
+    <script>
+        // Force refresh admin script cache
+        console.log('=== ADMIN DASHBOARD LOADED - NEW VERSION ===');
+        console.log('Using backend API endpoints only - no file fallback');
+        console.log('Script version: 20250617183000');
+        console.log('Timestamp: ' + new Date().toISOString());
+    </script>
 </body>
 </html>

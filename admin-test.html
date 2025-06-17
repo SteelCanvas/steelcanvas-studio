@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard TEST - Steel Canvas Studio</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        body { 
+            background: #1a1a1a; 
+            color: #e8e8e8; 
+            font-family: 'Segoe UI', sans-serif; 
+            padding: 20px;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .error-display {
+            background: #ff4444;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        .success-display {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        .status-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #444;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Admin Dashboard - Backend API Test</h1>
+        <p>This page tests the backend API connections directly.</p>
+        
+        <div id="errorDisplay" class="error-display"></div>
+        <div id="successDisplay" class="success-display"></div>
+        
+        <div class="status-item">
+            <strong>Script Status:</strong> <span id="scriptStatus">Loading...</span>
+        </div>
+        
+        <div class="status-item">
+            <strong>Backend URL:</strong> <span id="backendUrl">http://localhost:8081/api</span>
+        </div>
+        
+        <div class="status-item">
+            <strong>Game Stats API:</strong> <span id="gameStatsStatus">Testing...</span>
+        </div>
+        
+        <div class="status-item">
+            <strong>Website Analytics API:</strong> <span id="websiteStatsStatus">Testing...</span>
+        </div>
+        
+        <div class="status-item">
+            <strong>Patreon API:</strong> <span id="patreonStatsStatus">Testing...</span>
+        </div>
+        
+        <h2>Console Output:</h2>
+        <div id="consoleOutput" style="background: #000; padding: 15px; border-radius: 4px; font-family: monospace; height: 300px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        console.log('🚀 TEST PAGE LOADED - BACKEND API ONLY');
+        
+        // Custom console log capture
+        const consoleDiv = document.getElementById('consoleOutput');
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            consoleDiv.innerHTML += '<div style="color: #4CAF50;">' + args.join(' ') + '</div>';
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            consoleDiv.innerHTML += '<div style="color: #f44336;">' + args.join(' ') + '</div>';
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        };
+        
+        document.getElementById('scriptStatus').textContent = 'NEW VERSION LOADED ✅';
+        
+        const apiBaseUrl = 'http://localhost:8081/api';
+        
+        async function testBackendAPIs() {
+            console.log('Testing backend API connections...');
+            
+            const errors = [];
+            
+            // Test Game Stats API
+            try {
+                console.log('Testing Game Stats API...');
+                const response = await fetch(`${apiBaseUrl}/public/stats`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('gameStatsStatus').textContent = 'Connected ✅';
+                    console.log('Game Stats API response:', data);
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                document.getElementById('gameStatsStatus').textContent = 'Failed ❌ - ' + error.message;
+                console.error('Game Stats API failed:', error.message);
+                errors.push('Game statistics unavailable - Backend connection failed');
+            }
+            
+            // Test Website Analytics API
+            try {
+                console.log('Testing Website Analytics API...');
+                const response = await fetch(`${apiBaseUrl}/public/cloudflare/analytics?days=30`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('websiteStatsStatus').textContent = 'Connected ✅';
+                    console.log('Website Analytics API response:', data);
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                document.getElementById('websiteStatsStatus').textContent = 'Failed ❌ - ' + error.message;
+                console.error('Website Analytics API failed:', error.message);
+                errors.push('Website analytics unavailable - Backend connection failed');
+            }
+            
+            // Test Patreon API
+            try {
+                console.log('Testing Patreon API...');
+                const response = await fetch(`${apiBaseUrl}/patreon/public/stats`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('patreonStatsStatus').textContent = 'Connected ✅';
+                    console.log('Patreon API response:', data);
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                document.getElementById('patreonStatsStatus').textContent = 'Failed ❌ - ' + error.message;
+                console.error('Patreon API failed:', error.message);
+                errors.push('Patreon data unavailable - Backend connection failed');
+            }
+            
+            // Show results
+            if (errors.length > 0) {
+                const errorDiv = document.getElementById('errorDisplay');
+                errorDiv.innerHTML = `
+                    <div style="font-weight: bold; margin-bottom: 10px;">⚠️ Backend Connection Issues:</div>
+                    ${errors.map(error => `<div>• ${error}</div>`).join('')}
+                    <div style="margin-top: 10px; font-size: 12px; opacity: 0.9;">This is the expected behavior when backend is down.</div>
+                `;
+                errorDiv.style.display = 'block';
+                console.error('🚨 Backend APIs failed - This demonstrates the error handling!');
+            } else {
+                const successDiv = document.getElementById('successDisplay');
+                successDiv.innerHTML = '✅ All backend APIs are working correctly!';
+                successDiv.style.display = 'block';
+                console.log('✅ All backend APIs connected successfully!');
+            }
+        }
+        
+        // Start testing
+        setTimeout(testBackendAPIs, 500);
+    </script>
+</body>
+</html>
