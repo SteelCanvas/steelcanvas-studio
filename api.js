@@ -5,8 +5,14 @@
 
 class SteelCanvasAPI {
     constructor() {
+        // AWS Elastic Beanstalk URL
+        this.awsApiUrl = 'http://steelcanvas-backend-env.eba-xajgzdxm.us-east-2.elasticbeanstalk.com/api/public';
+        
+        // Local backend for development
         this.baseUrl = 'http://localhost:8081/api/public';
         this.websocketUrl = 'ws://localhost:8081/ws';
+        
+        // Configuration
         this.cachePrefix = 'steelcanvas_';
         this.cacheDuration = 5 * 60 * 1000; // 5 minutes
         this.fallbackData = this.getFallbackData();
@@ -17,6 +23,7 @@ class SteelCanvasAPI {
         this.reconnectDelay = 3000;
         this.pollingInterval = null;
         this.useWebSocket = true;
+        this.useAWS = true; // Prefer AWS API for public statistics
     }
 
     /**
@@ -134,17 +141,43 @@ class SteelCanvasAPI {
     }
 
     /**
-     * Make API request with fallback handling - BACKEND DATA ONLY
+     * Make API request with AWS and local backend fallback handling
      */
     async apiRequest(endpoint, fallbackKey) {
+        // Try AWS API first for public statistics
+        if (this.useAWS && this.isPublicEndpoint(endpoint)) {
+            try {
+                console.log(`🌐 Fetching data from AWS API: ${endpoint}`);
+                const awsEndpoint = this.mapToAWSEndpoint(endpoint);
+                const response = await fetch(`${this.awsApiUrl}${awsEndpoint}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    signal: AbortSignal.timeout(8000)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    this.setCachedData(endpoint, data);
+                    console.log(`✅ Successfully fetched data from AWS API: ${endpoint}`);
+                    return data;
+                }
+                
+                console.warn(`⚠️ AWS API returned ${response.status}, trying local backend`);
+            } catch (awsError) {
+                console.warn(`⚠️ AWS API failed for ${endpoint}: ${awsError.message}`);
+            }
+        }
+
+        // Try local backend
         try {
-            console.log(`🔍 Fetching LIVE data from ${this.baseUrl}${endpoint}`);
+            console.log(`🔍 Fetching data from local backend: ${this.baseUrl}${endpoint}`);
             const response = await fetch(`${this.baseUrl}${endpoint}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                // Timeout after 10 seconds (increased for backend connection)
                 signal: AbortSignal.timeout(10000)
             });
 
@@ -153,30 +186,44 @@ class SteelCanvasAPI {
             }
 
             const data = await response.json();
-            
-            // Cache the successful response
             this.setCachedData(endpoint, data);
-            console.log(`✅ Successfully fetched LIVE backend data for ${endpoint}`);
-            
+            console.log(`✅ Successfully fetched data from local backend: ${endpoint}`);
             return data;
 
         } catch (error) {
             console.error(`❌ Backend connection failed for ${endpoint}:`, error.message);
             
-            // Check if we have recent cached data from backend
+            // Check if we have recent cached data
             const cachedData = this.getCachedData(endpoint);
             if (cachedData) {
-                console.log(`🔄 Using recent cached backend data for ${endpoint}`);
+                console.log(`🔄 Using cached data for ${endpoint}`);
                 return cachedData;
             }
             
-            // Only use fallback data as last resort and warn heavily
-            console.warn(`⚠️ USING MOCK DATA - Backend is unavailable for ${endpoint}`);
-            console.warn(`⚠️ This is fallback data and not real game statistics!`);
-            
-            const fallbackData = this.fallbackData[fallbackKey];
-            return fallbackData;
+            // Use fallback data as last resort
+            console.warn(`⚠️ Using fallback data for ${endpoint}`);
+            return this.fallbackData[fallbackKey];
         }
+    }
+
+    /**
+     * Check if endpoint should use AWS public API
+     */
+    isPublicEndpoint(endpoint) {
+        const publicEndpoints = ['/stats/overview', '/leaderboard/top10', '/activity/recent'];
+        return publicEndpoints.includes(endpoint);
+    }
+
+    /**
+     * Map local endpoint to AWS Elastic Beanstalk endpoint
+     */
+    mapToAWSEndpoint(endpoint) {
+        const mapping = {
+            '/stats/overview': '/stats',
+            '/leaderboard/top10': '/leaderboard/top10',
+            '/activity/recent': '/activity/recent'
+        };
+        return mapping[endpoint] || endpoint;
     }
 
     /**

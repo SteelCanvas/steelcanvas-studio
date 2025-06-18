@@ -18,9 +18,10 @@ console.log('🚀 NEW ADMIN SCRIPT LOADED - BACKEND API ONLY');
 //
 class AdminDashboard {
     constructor() {
-        // LOCAL: Use localhost for testing API endpoints when backend is accessible
-        // AWS: Change to production backend URL (e.g., https://api.steelcanvas.studio)
-        this.apiBaseUrl = 'http://localhost:8081/api';
+        // Backend URL - auto-detect environment
+        this.apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8080/api'  // Local development
+            : 'https://api.steelcanvas.studio/api';  // Production
         this.websocketUrl = 'ws://localhost:8081/ws';
         this.charts = {};
         this.dashboardData = null;
@@ -142,8 +143,11 @@ class AdminDashboard {
             
         } catch (error) {
             console.error('Critical error loading data:', error.message);
-            this.showErrorMessages(['Backend server is not responding - All data unavailable']);
-            this.dashboardData = this.generateDashboardData({ errors: ['Backend server offline'] });
+            this.showErrorMessages(['Backend server is not responding - Using demo data']);
+            
+            // Use fallback demo data when backend is offline
+            realData = this.getFallbackData();
+            this.dashboardData = this.generateDashboardData(realData);
         }
 
         this.renderAllTabs();
@@ -185,6 +189,39 @@ class AdminDashboard {
         }
     }
 
+
+    getFallbackData() {
+        // Demo data when backend is not available
+        return {
+            overview: {
+                totalPlayers: 1247,
+                recentPlayers: 89,
+                totalGamesPlayed: 3456,
+                activeSessions: 12,
+                averageScore: 8543,
+                totalScore: 25670
+            },
+            website: {
+                visitors: 2341,
+                pageViews: 7829,
+                bounceRate: 0.35,
+                avgSessionDuration: 145,
+                bandwidth: 1024 * 1024 * 256, // 256 MB
+                requests: 15432,
+                uniqueVisitors: 1876,
+                configured: false // Demo data, not real Cloudflare
+            },
+            patreon: {
+                monthlyRevenue: 127,
+                supporters: 23,
+                goals: [
+                    { title: "Basic Development", target: 100, current: 127 },
+                    { title: "Art & Animation", target: 300, current: 127 }
+                ],
+                totalPosts: 15
+            }
+        };
+    }
 
     getLocalVisitorData() {
         // Simple visitor tracking using localStorage
