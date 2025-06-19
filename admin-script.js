@@ -20,7 +20,7 @@ class AdminDashboard {
     constructor() {
         // Backend URL - auto-detect environment
         this.apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'http://localhost:8080/api'  // Local development
+            ? 'https://api.steelcanvas.studio/api'  // Use AWS server even in local development
             : 'https://api.steelcanvas.studio/api';  // Production
         this.websocketUrl = 'ws://localhost:8081/ws';
         this.charts = {};
@@ -96,7 +96,7 @@ class AdminDashboard {
                 errorDiv.textContent = '';
                 this.showDashboard();
             } else {
-                errorDiv.textContent = 'Backend unavailable - check credentials or try again later';
+                errorDiv.textContent = 'Invalid credentials - please check username and password';
             }
         }
     }
