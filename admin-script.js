@@ -18,8 +18,8 @@ console.log('🚀 NEW ADMIN SCRIPT LOADED - BACKEND API ONLY');
 //
 class AdminDashboard {
     constructor() {
-        // Backend URL - Use CloudFront HTTPS proxy
-        this.apiBaseUrl = 'https://d30ys5ubumocpz.cloudfront.net/api';
+        // Backend URL - Use Cloudflare proxied domain
+        this.apiBaseUrl = 'https://api.steelcanvas.dev/api';
         this.websocketUrl = 'ws://localhost:8081/ws';
         this.charts = {};
         this.dashboardData = null;
