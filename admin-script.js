@@ -18,8 +18,8 @@ console.log('🚀 NEW ADMIN SCRIPT LOADED - BACKEND API ONLY');
 //
 class AdminDashboard {
     constructor() {
-        // Backend URL - Use AWS Elastic Beanstalk backend directly
-        this.apiBaseUrl = 'http://steelcanvas-backend-env.eba-xajgzdxm.us-east-2.elasticbeanstalk.com/api';
+        // Backend URL - Use CloudFront HTTPS proxy
+        this.apiBaseUrl = 'https://d30ys5ubumocpz.cloudfront.net/api';
         this.websocketUrl = 'ws://localhost:8081/ws';
         this.charts = {};
         this.dashboardData = null;
