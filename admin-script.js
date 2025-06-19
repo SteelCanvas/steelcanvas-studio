@@ -63,41 +63,14 @@ class AdminDashboard {
         const password = document.getElementById('password').value;
         const errorDiv = document.getElementById('errorMessage');
 
-        try {
-            // Authenticate against the backend database
-            const response = await fetch(`${this.apiBaseUrl}/admin/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                })
-            });
-
-            const result = await response.json();
-
-            if (response.ok && result.success) {
-                localStorage.setItem('adminLoggedIn', 'true');
-                localStorage.setItem('adminToken', result.token);
-                localStorage.setItem('adminUsername', result.username);
-                errorDiv.textContent = '';
-                this.showDashboard();
-            } else {
-                errorDiv.textContent = result.error || 'Invalid username or password';
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            // Fallback to hardcoded authentication if backend is unavailable
-            if (username === 'admin' && password === '4zFdofhK7DzarlSEuJBm89i') {
-                localStorage.setItem('adminLoggedIn', 'true');
-                localStorage.setItem('adminUsername', 'admin');
-                errorDiv.textContent = '';
-                this.showDashboard();
-            } else {
-                errorDiv.textContent = 'Invalid credentials - please check username and password';
-            }
+        // Use hardcoded authentication since AWS backend is not deployed yet
+        if (username === 'admin' && password === '4zFdofhK7DzarlSEuJBm89i') {
+            localStorage.setItem('adminLoggedIn', 'true');
+            localStorage.setItem('adminUsername', 'admin');
+            errorDiv.textContent = '';
+            this.showDashboard();
+        } else {
+            errorDiv.textContent = 'Invalid username or password';
         }
     }
 
