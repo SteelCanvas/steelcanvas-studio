@@ -61,41 +61,73 @@ class AdminDashboard {
         const password = document.getElementById('password').value;
         const errorDiv = document.getElementById('errorMessage');
 
+        console.log('🔐 LOGIN ATTEMPT STARTED');
+        console.log('📋 Username:', username);
+        console.log('🔑 Password length:', password.length);
+        console.log('🌐 Backend URL:', this.apiBaseUrl);
+
         try {
-            // Try backend authentication first
+            console.log('📡 Attempting backend authentication...');
+            
+            const requestData = {
+                username: username,
+                password: password
+            };
+            console.log('📤 Request data:', requestData);
+
             const response = await fetch(`${this.apiBaseUrl}/admin/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                })
+                body: JSON.stringify(requestData)
             });
+
+            console.log('📥 Response status:', response.status);
+            console.log('📥 Response ok:', response.ok);
+            console.log('📥 Response headers:', Object.fromEntries(response.headers.entries()));
 
             if (response.ok) {
                 const result = await response.json();
+                console.log('✅ Backend response:', result);
+                
                 if (result.success) {
+                    console.log('🎉 Backend authentication successful!');
                     localStorage.setItem('adminLoggedIn', 'true');
                     localStorage.setItem('adminToken', result.token);
                     localStorage.setItem('adminUsername', result.username);
                     errorDiv.textContent = '';
                     this.showDashboard();
                     return;
+                } else {
+                    console.log('❌ Backend authentication failed:', result.error);
                 }
+            } else {
+                const errorText = await response.text();
+                console.log('❌ Backend HTTP error:', errorText);
             }
         } catch (error) {
-            console.error('Backend auth failed:', error);
+            console.error('🚨 Backend auth failed with exception:', error);
+            console.error('🚨 Error details:', {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            });
         }
+
+        console.log('🔄 Falling back to hardcoded authentication...');
+        console.log('🔍 Checking credentials: admin === ' + username + '?', username === 'admin');
+        console.log('🔍 Password matches?', password === '4zFdofhK7DzarlSEuJBm89i');
 
         // Fallback to hardcoded authentication
         if (username === 'admin' && password === '4zFdofhK7DzarlSEuJBm89i') {
+            console.log('✅ Hardcoded authentication successful!');
             localStorage.setItem('adminLoggedIn', 'true');
             localStorage.setItem('adminUsername', 'admin');
             errorDiv.textContent = '';
             this.showDashboard();
         } else {
+            console.log('❌ All authentication methods failed');
             errorDiv.textContent = 'Invalid username or password';
         }
     }
