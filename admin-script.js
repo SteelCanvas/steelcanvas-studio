@@ -119,10 +119,10 @@ class AdminDashboard {
 
         console.log('🔄 Falling back to hardcoded authentication...');
         console.log('🔍 Checking credentials: admin === ' + username + '?', username === 'admin');
-        console.log('🔍 Password matches?', password === 'CHANGE_THIS_PASSWORD_NOW');
+        console.log('🔍 Password matches?', password === '4zFdofhK7DzarlSEuJBm89i');
 
         // Fallback to hardcoded authentication  
-        if (username === 'admin' && password === 'CHANGE_THIS_PASSWORD_NOW') {
+        if (username === 'admin' && password === '4zFdofhK7DzarlSEuJBm89i') {
             console.log('✅ Hardcoded authentication successful!');
             localStorage.setItem('adminLoggedIn', 'true');
             localStorage.setItem('adminUsername', 'admin');
@@ -158,7 +158,7 @@ class AdminDashboard {
             
             // Use backend API endpoints directly - no more file-based approach
             const [overviewResponse, cloudflareResponse, patreonResponse] = await Promise.all([
-                fetch(`${this.apiBaseUrl}/public/stats`).catch(() => null),
+                fetch(`${this.apiBaseUrl}/public/stats/summary`).catch(() => null),
                 fetch(`${this.apiBaseUrl}/public/cloudflare/analytics?days=30`).catch(() => null),
                 fetch(`${this.apiBaseUrl}/patreon/public/stats`).catch(() => null)
             ]);
