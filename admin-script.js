@@ -119,10 +119,10 @@ class AdminDashboard {
 
         console.log('🔄 Falling back to hardcoded authentication...');
         console.log('🔍 Checking credentials: admin === ' + username + '?', username === 'admin');
-        console.log('🔍 Password matches?', password === '4zFdofhK7DzarlSEuJBm89i');
+        console.log('🔍 Password matches?', password === 'CHANGE_THIS_PASSWORD_NOW');
 
-        // Fallback to hardcoded authentication
-        if (username === 'admin' && password === '4zFdofhK7DzarlSEuJBm89i') {
+        // Fallback to hardcoded authentication  
+        if (username === 'admin' && password === 'CHANGE_THIS_PASSWORD_NOW') {
             console.log('✅ Hardcoded authentication successful!');
             localStorage.setItem('adminLoggedIn', 'true');
             localStorage.setItem('adminUsername', 'admin');
