@@ -18,10 +18,8 @@ console.log('🚀 NEW ADMIN SCRIPT LOADED - BACKEND API ONLY');
 //
 class AdminDashboard {
     constructor() {
-        // Backend URL - auto-detect environment
-        this.apiBaseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'https://api.steelcanvas.studio/api'  // Use AWS server even in local development
-            : 'https://api.steelcanvas.studio/api';  // Production
+        // Backend URL - use deployed AWS Elastic Beanstalk backend
+        this.apiBaseUrl = 'http://steelcanvas-backend-env.eba-xajgzdxm.us-east-2.elasticbeanstalk.com/api';
         this.websocketUrl = 'ws://localhost:8081/ws';
         this.charts = {};
         this.dashboardData = null;
@@ -63,7 +61,35 @@ class AdminDashboard {
         const password = document.getElementById('password').value;
         const errorDiv = document.getElementById('errorMessage');
 
-        // Use hardcoded authentication since AWS backend is not deployed yet
+        try {
+            // Try backend authentication first
+            const response = await fetch(`${this.apiBaseUrl}/admin/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminToken', result.token);
+                    localStorage.setItem('adminUsername', result.username);
+                    errorDiv.textContent = '';
+                    this.showDashboard();
+                    return;
+                }
+            }
+        } catch (error) {
+            console.error('Backend auth failed:', error);
+        }
+
+        // Fallback to hardcoded authentication
         if (username === 'admin' && password === '4zFdofhK7DzarlSEuJBm89i') {
             localStorage.setItem('adminLoggedIn', 'true');
             localStorage.setItem('adminUsername', 'admin');
