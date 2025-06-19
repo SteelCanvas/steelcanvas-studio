@@ -18,8 +18,8 @@ console.log('🚀 NEW ADMIN SCRIPT LOADED - BACKEND API ONLY');
 //
 class AdminDashboard {
     constructor() {
-        // Backend URL - use deployed AWS Elastic Beanstalk backend
-        this.apiBaseUrl = 'http://steelcanvas-backend-env.eba-xajgzdxm.us-east-2.elasticbeanstalk.com/api';
+        // Backend URL - use HTTPS to avoid mixed content issues
+        this.apiBaseUrl = 'https://steelcanvas-backend-env.eba-xajgzdxm.us-east-2.elasticbeanstalk.com/api';
         this.websocketUrl = 'ws://localhost:8081/ws';
         this.charts = {};
         this.dashboardData = null;
@@ -65,6 +65,8 @@ class AdminDashboard {
         console.log('📋 Username:', username);
         console.log('🔑 Password length:', password.length);
         console.log('🌐 Backend URL:', this.apiBaseUrl);
+        console.log('🔒 Page protocol:', window.location.protocol);
+        console.log('🏠 Page hostname:', window.location.hostname);
 
         try {
             console.log('📡 Attempting backend authentication...');
@@ -817,8 +819,12 @@ class AdminDashboard {
     renderWebsiteTrafficChart() {
         const ctx = document.getElementById('websiteTrafficChart');
         if (!ctx) {
-            console.warn('websiteTrafficChart canvas not found, retrying...');
-            setTimeout(() => this.renderWebsiteTrafficChart(), 200);
+            // Only retry for 3 seconds, then stop to prevent console spam
+            if (!this.chartRetryCount) this.chartRetryCount = 0;
+            if (this.chartRetryCount < 15) {
+                this.chartRetryCount++;
+                setTimeout(() => this.renderWebsiteTrafficChart(), 200);
+            }
             return;
         }
 
