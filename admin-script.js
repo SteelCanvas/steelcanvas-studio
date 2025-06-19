@@ -18,8 +18,8 @@ console.log('🚀 NEW ADMIN SCRIPT LOADED - BACKEND API ONLY');
 //
 class AdminDashboard {
     constructor() {
-        // Backend URL - use HTTPS to avoid mixed content issues
-        this.apiBaseUrl = 'https://steelcanvas-backend-env.eba-xajgzdxm.us-east-2.elasticbeanstalk.com/api';
+        // Backend URL - Use AWS Elastic Beanstalk backend directly
+        this.apiBaseUrl = 'http://steelcanvas-backend-env.eba-xajgzdxm.us-east-2.elasticbeanstalk.com/api';
         this.websocketUrl = 'ws://localhost:8081/ws';
         this.charts = {};
         this.dashboardData = null;
